@@ -8,20 +8,15 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   return (
-    <nav className="sticky top-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border">
+    <nav className="sticky top-0 z-50 backdrop-blur-lg border-b border-border" style={{ backgroundColor: 'hsl(42.86deg 18.92% 92.75%)' }} >
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <div 
-            className="flex items-center gap-2 cursor-pointer" 
+          <div
+            className="flex items-center gap-2 cursor-pointer"
             onClick={() => navigate("/")}
           >
-            <div className="w-10 h-10 rounded-lg bg-gradient-primary flex items-center justify-center">
-              <Palette className="h-6 w-6 text-primary-foreground" />
-            </div>
-            <span className="text-2xl font-bold bg-gradient-primary bg-clip-text text-transparent">
-              Yome
-            </span>
+            <img src="/src/assets/ue-logo.png" alt="UE Logo" className="w-14 h-14 rounded-lg" />
           </div>
 
           {/* Desktop Navigation */}
