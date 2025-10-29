@@ -2,8 +2,10 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Sparkles, Palette, Rocket, Users, Zap, Heart, Target, Globe } from "lucide-react";
 import { useRef, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const AboutUsMinimal = () => {
+  const navigate = useNavigate();
   const [mounted, setMounted] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const canvasRef2 = useRef<HTMLCanvasElement>(null);
@@ -63,21 +65,7 @@ const AboutUsMinimal = () => {
         ctx.fillStyle = particle.color;
         ctx.fill();
 
-        // Draw connections
-        for (let j = index + 1; j < particles.length; j++) {
-          const dx = particles[j].x - particle.x;
-          const dy = particles[j].y - particle.y;
-          const distance = Math.sqrt(dx * dx + dy * dy);
 
-          if (distance < 120) {
-            ctx.beginPath();
-            ctx.strokeStyle = `${particle.color}20`;
-            ctx.lineWidth = 0.3;
-            ctx.moveTo(particle.x, particle.y);
-            ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.stroke();
-          }
-        }
       });
 
       requestAnimationFrame(animate);
@@ -206,7 +194,7 @@ const AboutUsMinimal = () => {
   ];
 
   return (
-    <section className="py-16 md:py-24 px-4 bg-gradient-to-br from-slate-50 via-blue-50/30 to-purple-50/20 dark:from-slate-900 dark:via-blue-950/20 dark:to-purple-950/10 relative overflow-hidden">
+    <section className="px-4 bg-gradient-to-br from-slate-50 via-blue-50/30 to-purple-50/20 dark:from-slate-900 dark:via-blue-950/20 dark:to-purple-950/10 relative overflow-hidden">
       {/* Primary Animated Background Canvas */}
       <canvas
         ref={canvasRef}
@@ -216,13 +204,11 @@ const AboutUsMinimal = () => {
       {/* Secondary Geometric Patterns Canvas */}
       <canvas
         ref={canvasRef2}
-        className="absolute inset-0 w-full h-full opacity-10"
+        className="absolute inset-0 w-full h-full opacity-05"
       />
       
       {/* Enhanced Animated Gradient Orbs */}
       <div className="absolute top-10 left-10 w-72 h-72 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-full blur-3xl animate-float-slow" />
-      <div className="absolute top-40 right-20 w-96 h-96 bg-gradient-to-r from-blue-500/10 to-cyan-500/10 rounded-full blur-3xl animate-float-slower" />
-      <div className="absolute bottom-20 left-20 w-80 h-80 bg-gradient-to-r from-orange-500/10 to-red-500/10 rounded-full blur-3xl animate-float" />
       <div className="absolute bottom-40 right-10 w-64 h-64 bg-gradient-to-r from-green-500/10 to-emerald-500/10 rounded-full blur-3xl animate-float-slow" />
       
       {/* New Floating Gradient Shapes */}
@@ -292,28 +278,13 @@ const AboutUsMinimal = () => {
         ))}
       </div>
 
-      {/* New Pulsing Rings */}
-      <div className="absolute top-1/2 left-1/3 transform -translate-x-1/2 -translate-y-1/2">
-        <div className="w-64 h-64 border-2 border-purple-400/20 rounded-full animate-ping-slow" />
-        <div className="absolute top-0 left-0 w-64 h-64 border-2 border-blue-400/20 rounded-full animate-ping-slower" />
-      </div>
-
       <div className="container mx-auto max-w-7xl relative z-10">
         {/* About Us Section */}
-        <div className="grid lg:grid-cols-2 gap-12 md:gap-16 items-center mb-20">
+        <div className="grid lg:grid-cols-2 gap-12 md:gap-16 items-center mb-5">
           {/* Left Content */}
-          <div className="space-y-8">
+          <div className="space-y-6">
             <div className="animate-slide-in-left">
-              <div className="inline-flex items-center gap-3 mb-6">
-                <div className="p-2 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 animate-pulse-glow">
-                  <Sparkles className="h-6 w-6 text-white" />
-                </div>
-                <span className="text-lg font-semibold text-purple-600 dark:text-purple-400">
-                  Our Story
-                </span>
-              </div>
-              
-              <h2 className="text-5xl md:text-7xl font-black mb-6 bg-gradient-to-r from-slate-800 via-purple-600 to-pink-500 dark:from-slate-100 dark:via-purple-400 dark:to-pink-400 bg-clip-text text-transparent animate-text-glow">
+              <h2 className="text-5xl md:text-7xl font-black mb-6 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
                 ABOUT US
               </h2>
               
@@ -332,28 +303,46 @@ const AboutUsMinimal = () => {
                 <span className="font-semibold text-transparent bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text"> tangible masterpieces </span>
                 with just a few clicks.
               </p>
-              
-              <p className="text-xl text-slate-700 dark:text-slate-300 leading-relaxed animate-fade-in-up" style={{ animationDelay: '600ms' }}>
-                From 3D design previews to global shipping, we've built an ecosystem that makes 
-                <span className="font-semibold text-transparent bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text"> professional custom products accessible to all.</span>
-              </p>
             </div>
 
             {/* CTA Button */}
             <div className="animate-fade-in-up" style={{ animationDelay: '1000ms' }}>
               <Button
                 size="lg"
-                className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-8 py-6 rounded-2xl text-lg font-semibold shadow-2xl transform hover:scale-105 transition-all duration-300 group animate-pulse-slow"
+                onClick={() => navigate("/designer")}
+                className="bg-gradient-primary text-primary-foreground hover:opacity-90 px-8 py-6 text-lg"
               >
-                <span className="flex items-center gap-3">
-                  Start Creating Now
-                  <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
-                </span>
+                Start Creating Now
               </Button>
+            </div>
+
+            {/* Floating Product Elements in Left Section */}
+            {/* Bag Product */}
+            <div className="absolute top-1/4 right-12 animate-product-float ">
+              <div className="bg-white/90 backdrop-blur-sm rounded-lg p-1 shadow-xl border border-purple-200 animate-bounce-gentle">
+                <img src="/src/assets/jamie-grant-continue-shopping-animation-1-gif.gif" alt="Custom Bag" className="w-20 h-16 rounded" />
+                <div className="text-xs text-center font-semibold text-purple-600 mt-1">Custom Bag</div>
+              </div>
+            </div>
+
+            {/* Cup Product */}
+            <div className="absolute bottom-3/4 right-12 animate-product-float-delayed  ">
+              <div className="bg-white/90  backdrop-blur-sm rounded-lg p-1 shadow-xl border border-blue-200 animate-bounce-gentle">
+                <img src="/src/assets/2f4239_b01946f5a45c47f19c1c5a5eb95a5c21~mv2.gif" alt="Custom Cup" className="w-20 h-16 rounded" />
+                <div className="text-xs text-center font-semibold text-blue-600 mt-1">Custom Cup</div>
+              </div>
+            </div>
+
+            {/* Clothes Product (T-Shirt) */}
+            <div className="absolute bottom-2/4 right-12 animate-product-float-reverse  ">
+              <div className="bg-white/90 backdrop-blur-sm rounded-lg p-1 shadow-xl border border-pink-200 animate-bounce-gentle">
+                <img src="/src/assets/o_1i53rei1tqkmrn51fi0h7b1epa1p.gif" alt="Custom Clothes" className="w-16 h-16 rounded" />
+                <div className="text-xs text-center font-semibold text-pink-600 mt-1">Custom Clothes</div>
+              </div>
             </div>
           </div>
 
-          {/* Right Illustration - Design Studio with Butterflies */}
+          {/* Right Illustration - Design Studio with Butterflies and Products */}
           <div className="relative h-[500px] lg:h-[600px]">
             {/* Design Tools and Butterflies */}
             <div className="absolute inset-0">
@@ -381,25 +370,7 @@ const AboutUsMinimal = () => {
 
               {/* Paint Brush */}
               <div className="absolute top-32 left-20 animate-tool-float-delayed">
-                <svg viewBox="0 0 60 120" className="w-12 h-24 drop-shadow-lg">
-                  <defs>
-                    <linearGradient id="brushGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#8b5cf6" />
-                      <stop offset="100%" stopColor="#ec4899" />
-                    </linearGradient>
-                  </defs>
-                  {/* Brush handle */}
-                  <rect x="25" y="80" width="10" height="40" rx="5" fill="#8b4513" />
-                  {/* Brush bristles */}
-                  <ellipse cx="30" cy="70" rx="20" ry="15" fill="url(#brushGradient)" />
-                  {/* Paint on bristles */}
-                  <ellipse cx="30" cy="65" rx="15" ry="10" fill="#06b6d4" opacity="0.8" />
-                </svg>
-              </div>
-
-              {/* Pencil */}
-              <div className="absolute bottom-32 right-20 animate-tool-float-reverse">
-                <svg viewBox="0 0 40 120" className="w-8 h-24 drop-shadow-lg">
+     <svg viewBox="0 0 40 120" className="w-8 h-24 drop-shadow-lg">
                   <defs>
                     <linearGradient id="pencilGradient" x1="0%" y1="0%" x2="100%" y2="100%">
                       <stop offset="0%" stopColor="#f59e0b" />
@@ -417,102 +388,130 @@ const AboutUsMinimal = () => {
                 </svg>
               </div>
 
-              {/* Central Butterfly Logo */}
+
+
+              {/* Central Logo with Product Elements */}
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="relative">
                   {/* Large Butterfly */}
                   <div className="animate-butterfly-center">
-                    <svg viewBox="0 0 200 200" className="w-48 h-48 animate-wing-flap-slow">
-                      <defs>
-                        <linearGradient id="logoButterflyGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                          <stop offset="0%" stopColor="#8b5cf6" />
-                          <stop offset="50%" stopColor="#ec4899" />
-                          <stop offset="100%" stopColor="#06b6d4" />
-                        </linearGradient>
-                      </defs>
-                      {/* Upper wings */}
-                      <path
-                        d="M100,40 Q70,20 40,60 Q20,100 60,120 Q100,140 140,120 Q180,100 160,60 Q140,20 100,40 Z"
-                        fill="url(#logoButterflyGradient)"
-                        opacity="0.9"
-                        className="animate-wing-upper-slow"
-                      />
-                      {/* Lower wings */}
-                      <path
-                        d="M100,100 Q75,90 50,130 Q25,170 75,180 Q100,190 125,180 Q175,170 150,130 Q125,90 100,100 Z"
-                        fill="url(#logoButterflyGradient)"
-                        opacity="0.7"
-                        className="animate-wing-lower-slow"
-                      />
-                      {/* Body */}
-                      <ellipse cx="100" cy="110" rx="5" ry="40" fill="#1a202c" />
-                      {/* Antennae */}
-                      <line x1="96" y1="70" x2="90" y2="50" stroke="#1a202c" strokeWidth="2" />
-                      <line x1="104" y1="70" x2="110" y2="50" stroke="#1a202c" strokeWidth="2" />
-                    </svg>
-                  </div>
-
-                  {/* Logo Text */}
-                  <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 text-center">
-                    <div className="bg-white/90 backdrop-blur-sm rounded-full px-4 py-2 shadow-lg border border-purple-200">
-                      <span className="text-sm font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-                        YOME DESIGN
-                      </span>
-                    </div>
+                    <img src="/src/assets/ue-logo.png" alt="Yome Logo" className="w-48 h-48 rounded-lg shadow-2xl" />
                   </div>
                 </div>
               </div>
 
-              {/* Design Elements with Butterflies */}
-              {[
-                { x: 15, y: 25, tool: 'brush', color: '#ff6b6b', delay: 0 },
-                { x: 75, y: 35, tool: 'pen', color: '#4ecdc4', delay: 0.8 },
-                { x: 35, y: 75, tool: 'palette', color: '#45b7d1', delay: 1.6 },
-                { x: 85, y: 65, tool: 'marker', color: '#96ceb4', delay: 2.4 }
-              ].map((item, index) => (
-                <div
-                  key={index}
-                  className="absolute animate-design-element-float"
-                  style={{
-                    left: `${item.x}%`,
-                    top: `${item.y}%`,
-                    animationDelay: `${item.delay}s`,
-                  }}
-                >
-                  {/* Small design tool icon */}
-                  <div className="w-6 h-6 rounded-full bg-white shadow-md border border-gray-200 flex items-center justify-center mb-2">
-                    {item.tool === 'brush' && <div className="w-3 h-3 bg-purple-500 rounded-full"></div>}
-                    {item.tool === 'pen' && <div className="w-3 h-0.5 bg-blue-500"></div>}
-                    {item.tool === 'palette' && <div className="w-2 h-2 bg-red-500 rounded"></div>}
-                    {item.tool === 'marker' && <div className="w-2 h-3 bg-green-500 rounded"></div>}
-                  </div>
-                  {/* Tiny butterfly */}
-                  <svg viewBox="0 0 30 30" className="w-6 h-6 animate-wing-flap">
-                    <path d="M15,6 Q11,3 7,9 Q3,15 11,18 Q15,21 19,18 Q27,15 23,9 Q19,3 15,6 Z" fill={item.color} opacity="0.7" />
-                    <ellipse cx="15" cy="16" rx="1" ry="6" fill="#2d3748" />
-                  </svg>
-                </div>
-              ))}
+
             </div>
 
-            {/* Floating Design Inspiration Particles */}
-            <div className="absolute inset-0">
-              {[...Array(25)].map((_, i) => (
-                <div
-                  key={i}
-                  className={`absolute w-1 h-1 rounded-full animate-dust-float opacity-60 ${
-                    i % 4 === 0 ? 'bg-purple-400' :
-                    i % 4 === 1 ? 'bg-pink-400' :
-                    i % 4 === 2 ? 'bg-blue-400' : 'bg-green-400'
-                  }`}
-                  style={{
-                    left: `${Math.random() * 100}%`,
-                    top: `${Math.random() * 100}%`,
-                    animationDelay: `${Math.random() * 5}s`,
-                    animationDuration: `${Math.random() * 10 + 5}s`,
-                  }}
-                />
-              ))}
+
+
+            {/* Computer Design Element */}
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 animate-canvas-float">
+              <div className="relative">
+                {/* Laptop Frame */}
+                <div className="w-72 h-52 bg-gray-800 rounded-lg shadow-2xl border-4 border-gray-900 relative overflow-hidden">
+                  {/* Laptop Screen */}
+                  <div className="w-full h-full bg-white relative overflow-hidden">
+                    {/* Design Software Interface */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-slate-100 to-slate-200">
+
+                      {/* Menu Bar */}
+                      <div className="h-8 bg-gradient-to-r from-slate-600 to-slate-700 flex items-center px-3 gap-2">
+                        <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                        <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                        <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                        <div className="flex-1"></div>
+                        <span className="text-xs text-white font-semibold">Yome Design Studio</span>
+                      </div>
+
+                      {/* Toolbar */}
+                      <div className="h-12 bg-slate-100 border-b border-slate-300 flex items-center px-4 gap-3">
+                        <div className="w-8 h-8 bg-blue-500 rounded flex items-center justify-center">
+                          <svg viewBox="0 0 20 20" className="w-4 h-4 text-white">
+                            <path d="M5,2 L15,2 L15,12 L10,17 L5,12 Z" fill="currentColor"/>
+                          </svg>
+                        </div>
+                        <div className="w-8 h-8 bg-purple-500 rounded flex items-center justify-center">
+                          <svg viewBox="0 0 20 20" className="w-4 h-4 text-white">
+                            <circle cx="10" cy="10" r="3" fill="currentColor"/>
+                            <path d="M7,10 L13,10 M10,7 L10,13" stroke="currentColor" strokeWidth="1.5"/>
+                          </svg>
+                        </div>
+                        <div className="w-8 h-8 bg-green-500 rounded flex items-center justify-center">
+                          <svg viewBox="0 0 20 20" className="w-4 h-4 text-white">
+                            <path d="M4,16 Q4,12 8,12 L12,12 Q16,12 16,16 L16,18 L4,18 Z" fill="currentColor"/>
+                            <rect x="7" y="8" width="6" height="8" fill="currentColor"/>
+                          </svg>
+                        </div>
+                      </div>
+
+                      {/* Canvas Area */}
+                      <div className="flex-1 relative">
+                        {/* Grid Background */}
+                        <div className="absolute inset-0 opacity-30">
+                          <div className="w-full h-full" style={{
+                            backgroundImage: `
+                              linear-gradient(rgba(0,0,0,0.1) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(0,0,0,0.1) 1px, transparent 1px)
+                            `,
+                            backgroundSize: '20px 20px'
+                          }} />
+                        </div>
+
+                        {/* Design Elements on Canvas */}
+                        <div className="absolute inset-0 p-4">
+                          {/* T-shirt Design */}
+                          <div className="absolute top-8 left-8 w-20 h-28 bg-gradient-to-b from-red-400 to-pink-400 rounded-t-lg rounded-b-sm relative shadow-lg">
+                            <div className="absolute top-2 left-2 w-16 h-20 bg-white rounded-t-lg rounded-b-sm">
+                              {/* Logo Design on shirt */}
+                              <div className="absolute top-3 left-1">
+                                <img src="/src/assets/ue-logo.png" alt="Yome Logo" className="w-12 h-12 rounded animate-wing-flap" />
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Coffee Cup Design */}
+                          <div className="absolute top-6 right-16 w-16 h-20 bg-gradient-to-b from-orange-400 to-yellow-400 rounded-t-lg relative shadow-lg">
+                            <div className="absolute top-2 left-2 w-12 h-16 bg-white rounded-t-lg">
+                              <div className="absolute top-2 left-1.5">
+                                <svg viewBox="0 0 50 50" className="w-9 h-9">
+                                  <path d="M8,15 Q8,10 13,10 L27,10 Q32,10 32,15 L32,30 Q32,35 27,35 L13,35 Q8,35 8,30 Z" fill="#06b6d4" />
+                                  <path d="M13,10 Q13,5 18,5 L32,5 Q32,10 27,10" stroke="#06b6d4" strokeWidth="2" fill="none" />
+                                  {/* Small logo on cup */}
+                                  <image href="/src/assets/ue-logo.png" x="16" y="18" width="12" height="12" />
+                                </svg>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Design Tools Palette */}
+                          <div className="absolute bottom-4 left-4 bg-white rounded-lg shadow-md p-2 border border-gray-200">
+                            <div className="flex gap-1">
+                              <div className="w-6 h-6 bg-red-500 rounded border-2 border-white shadow-sm"></div>
+                              <div className="w-6 h-6 bg-blue-500 rounded border-2 border-white shadow-sm"></div>
+                              <div className="w-6 h-6 bg-yellow-500 rounded border-2 border-white shadow-sm"></div>
+                              <div className="w-6 h-6 bg-green-500 rounded border-2 border-white shadow-sm"></div>
+                              <div className="w-6 h-6 bg-purple-500 rounded border-2 border-white shadow-sm"></div>
+                            </div>
+                          </div>
+
+                          {/* Selection Handles */}
+                          <div className="absolute top-6 left-6 w-24 h-32 border-2 border-blue-500 rounded">
+                            <div className="absolute -top-1 -left-1 w-2 h-2 bg-blue-500 rounded-full"></div>
+                            <div className="absolute -top-1 -right-1 w-2 h-2 bg-blue-500 rounded-full"></div>
+                            <div className="absolute -bottom-1 -left-1 w-2 h-2 bg-blue-500 rounded-full"></div>
+                            <div className="absolute -bottom-1 -right-1 w-2 h-2 bg-blue-500 rounded-full"></div>
+                          </div>
+
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Laptop Base */}
+                  <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 w-80 h-6 bg-gray-800 rounded-b-lg shadow-lg"></div>
+                </div>
+              </div>
             </div>
 
             {/* Design Grid Background */}
@@ -571,22 +570,7 @@ const AboutUsMinimal = () => {
           75% { transform: translateY(-10px) rotate(270deg) scale(1.05); }
         }
 
-        @keyframes blob {
-          0%, 100% { transform: translate(0px, 0px) scale(1); }
-          33% { transform: translate(30px, -50px) scale(1.1); }
-          66% { transform: translate(-20px, 20px) scale(0.9); }
-        }
 
-        @keyframes blob-reverse {
-          0%, 100% { transform: translate(0px, 0px) scale(1); }
-          33% { transform: translate(-30px, 50px) scale(0.9); }
-          66% { transform: translate(20px, -20px) scale(1.1); }
-        }
-
-        @keyframes plant-wave {
-          0%, 100% { transform: rotate(var(--rotation)) translateY(var(--translate)); }
-          50% { transform: rotate(calc(var(--rotation) + 5deg)) translateY(calc(var(--translate) - 5px)); }
-        }
 
         @keyframes person-float {
           0%, 100% { transform: translateY(0px); }
@@ -598,21 +582,6 @@ const AboutUsMinimal = () => {
           50% { transform: translateY(-5px); }
         }
 
-        @keyframes wave {
-          0% { transform: translateX(0%); }
-          50% { transform: translateX(-2%); }
-          100% { transform: translateX(0%); }
-        }
-
-        @keyframes text-glow {
-          0%, 100% { filter: drop-shadow(0 0 10px rgba(139, 92, 246, 0.3)); }
-          50% { filter: drop-shadow(0 0 20px rgba(236, 72, 153, 0.5)); }
-        }
-
-        @keyframes pulse-glow {
-          0%, 100% { box-shadow: 0 0 20px rgba(139, 92, 246, 0.4); }
-          50% { box-shadow: 0 0 40px rgba(236, 72, 153, 0.6); }
-        }
 
         @keyframes width-grow {
           0% { width: 0px; }
@@ -627,12 +596,6 @@ const AboutUsMinimal = () => {
         @keyframes grid-move {
           0% { transform: translate(0, 0); }
           100% { transform: translate(50px, 50px); }
-        }
-
-        @keyframes line-sweep {
-          0% { transform: translateX(-100%); opacity: 0; }
-          50% { opacity: 1; }
-          100% { transform: translateX(100%); opacity: 0; }
         }
 
         @keyframes ping-slow {
@@ -713,6 +676,37 @@ const AboutUsMinimal = () => {
           50% { transform: translateY(-20px) translateX(10px) rotate(180deg) scale(1.1); }
         }
 
+        @keyframes product-float {
+          0%, 100% { transform: translateY(0px) translateX(0px) rotate(0deg) scale(1); }
+          25% { transform: translateY(-15px) translateX(5px) rotate(2deg) scale(1.05); }
+          50% { transform: translateY(-8px) translateX(-3px) rotate(-1deg) scale(0.98); }
+          75% { transform: translateY(-12px) translateX(2px) rotate(1deg) scale(1.02); }
+        }
+
+        @keyframes product-float-delayed {
+          0%, 100% { transform: translateY(0px) translateX(0px) rotate(0deg) scale(1); }
+          25% { transform: translateY(-12px) translateX(-4px) rotate(-2deg) scale(1.03); }
+          50% { transform: translateY(-6px) translateX(3px) rotate(1deg) scale(0.97); }
+          75% { transform: translateY(-10px) translateX(-1px) rotate(-0.5deg) scale(1.01); }
+        }
+
+        @keyframes product-float-reverse {
+          0%, 100% { transform: translateY(0px) translateX(0px) rotate(0deg) scale(1); }
+          25% { transform: translateY(12px) translateX(-4px) rotate(-2deg) scale(0.97); }
+          50% { transform: translateY(6px) translateX(3px) rotate(1deg) scale(1.03); }
+          75% { transform: translateY(10px) translateX(-1px) rotate(-0.5deg) scale(0.99); }
+        }
+
+        @keyframes bounce-gentle {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-5px); }
+        }
+
+        @keyframes pulse-slow {
+          0%, 100% { opacity: 0.8; transform: scale(1); }
+          50% { opacity: 1; transform: scale(1.02); }
+        }
+
         .animate-float-random { animation: float-random 20s ease-in-out infinite; }
         .animate-float-icon { animation: float-icon 15s ease-in-out infinite; }
         .animate-blob { animation: blob 20s ease-in-out infinite; }
@@ -742,9 +736,15 @@ const AboutUsMinimal = () => {
         .animate-tool-float-delayed { animation: tool-float-delayed 8s ease-in-out infinite; }
         .animate-tool-float-reverse { animation: tool-float-reverse 7s ease-in-out infinite; }
         .animate-design-element-float { animation: design-element-float 10s ease-in-out infinite; }
+        .animate-product-float { animation: product-float 8s ease-in-out infinite; }
+        .animate-product-float-delayed { animation: product-float-delayed 10s ease-in-out infinite; }
+        .animate-product-float-reverse { animation: product-float-reverse 9s ease-in-out infinite; }
+        .animate-bounce-gentle { animation: bounce-gentle 3s ease-in-out infinite; }
+        .animate-pulse-slow { animation: pulse-slow 4s ease-in-out infinite; }
       `}} />
     </section>
   );
 };
 
 export default AboutUsMinimal;
+

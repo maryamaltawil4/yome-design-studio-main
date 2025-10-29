@@ -203,146 +203,7 @@ const Testimonials = () => {
 
   return (
     <section className="bg-gradient-to-b from-slate-50 to-background dark:from-slate-900/20">
-      {/* About Us Section */}
-      <div className="container mx-auto max-w-7xl mb-20">
-        {/* Header Section */}
-        <div className="text-center mb-16 md:mb-20">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-cyan-600 rounded-full text-white mb-6 shadow-lg text-sm md:text-base">
-            <Sparkles className="h-4 w-4" />
-            <span className="font-semibold">Our Story</span>
-            <Award className="h-4 w-4" />
-          </div>
-          <h2 className="text-4xl md:text-6xl lg:text-7xl font-black mb-6 bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
-            About Yome
-          </h2>
-          <p className="text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
-            We're on a mission to make custom product design
-            <span className="font-semibold text-transparent bg-gradient-to-r from-blue-500 to-cyan-600 bg-clip-text"> accessible to everyone </span>
-            while maintaining professional quality and unmatched creativity.
-          </p>
-        </div>
 
-        {/* Main Content Grid */}
-        <div className="grid lg:grid-cols-2 gap-12 md:gap-16 mb-20">
-          {/* Story Section */}
-          <div className="space-y-6">
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 dark:bg-blue-950/30 rounded-full text-blue-700 dark:text-blue-300 mb-4">
-              <Rocket className="h-4 w-4" />
-              <span className="font-medium">Our Journey</span>
-            </div>
-
-            <h3 className="text-3xl md:text-4xl font-bold text-foreground">
-              From Vision to Reality
-            </h3>
-
-            <div className="space-y-4 text-lg text-muted-foreground leading-relaxed">
-              <p>
-                Yome was born from a simple observation: creating custom products should be
-                <span className="font-semibold text-foreground"> joyful, not complicated.</span>
-                Traditional custom printing services were either too expensive, too complex, or too limited.
-              </p>
-
-              <p>
-                We set out to build a platform that combines
-                <span className="font-semibold text-foreground"> professional-grade quality </span>
-                with an intuitive, fun design experience. Today, we're proud to serve a global community
-                of artists, entrepreneurs, and creators.
-              </p>
-
-              <p>
-                Our 3D preview technology and AI-assisted design tools are just the beginning.
-                We're constantly innovating to make your creative journey even more magical.
-              </p>
-            </div>
-
-            {/* Team Stats */}
-            <div className="grid grid-cols-2 gap-4 pt-6">
-              {teamStats.map((stat, index) => (
-                <div key={index} className="text-center p-4 bg-white/50 dark:bg-slate-800/30 rounded-xl backdrop-blur-sm border border-slate-200 dark:border-slate-700">
-                  <div className="flex justify-center mb-2">
-                    <div className="p-2 rounded-lg bg-blue-100 dark:bg-blue-900/30">
-                      <stat.icon className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-                    </div>
-                  </div>
-                  <div className="text-2xl font-bold text-foreground">{stat.number}</div>
-                  <div className="text-sm text-muted-foreground">{stat.label}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Values Section */}
-          <div className="space-y-6">
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-50 dark:bg-green-950/30 rounded-full text-green-700 dark:text-green-300 mb-4">
-              <Target className="h-4 w-4" />
-              <span className="font-medium">Our Values</span>
-            </div>
-
-            <h3 className="text-3xl md:text-4xl font-bold text-foreground">
-              What Drives Us
-            </h3>
-
-            <div className="grid gap-4">
-              {values.map((value, index) => (
-                <Card
-                  key={index}
-                  className="group p-6 border-0 bg-white/50 dark:bg-slate-800/30 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-500 hover:scale-[1.02]"
-                >
-                  <div className="flex items-start gap-4">
-                    <div className={`p-3 rounded-xl bg-gradient-to-r ${value.color} group-hover:scale-110 transition-transform duration-300`}>
-                      <value.icon className="h-6 w-6 text-white" />
-                    </div>
-                    <div className="flex-1">
-                      <h4 className="text-xl font-bold text-foreground mb-2">
-                        {value.title}
-                      </h4>
-                      <p className="text-muted-foreground leading-relaxed">
-                        {value.description}
-                      </p>
-                    </div>
-                  </div>
-                </Card>
-              ))}
-            </div>
-          </div>
-        </div>
-
-
-
-        {/* CTA Section */}
-        <Card className="text-center p-8 md:p-12 border-0 bg-gradient-to-r from-slate-900 to-slate-800 text-white relative overflow-hidden">
-          {/* Background Elements */}
-          <div className="absolute top-0 right-0 w-48 h-48 bg-white/5 rounded-full blur-3xl" />
-          <div className="absolute bottom-0 left-0 w-32 h-32 bg-white/5 rounded-full blur-3xl" />
-
-          <div className="relative z-10">
-            <h3 className="text-3xl md:text-4xl font-bold mb-4">
-              Ready to Create With Us?
-            </h3>
-            <p className="text-xl text-slate-300 mb-8 max-w-2xl mx-auto">
-              Join thousands of creators who are already designing amazing custom products with Yome
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button
-                size="lg"
-                className="bg-white text-slate-900 hover:bg-slate-100 text-lg px-8 py-6 rounded-2xl shadow-2xl transform hover:scale-105 transition-all duration-300 group"
-              >
-                <span className="flex items-center gap-3">
-                  Start Designing
-                  <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
-                </span>
-              </Button>
-              <Button
-                variant="outline"
-                size="lg"
-                className="border-2 border-white text-white hover:bg-white/10 text-lg px-8 py-6 rounded-2xl backdrop-blur-sm"
-              >
-                Meet The Team
-              </Button>
-            </div>
-          </div>
-        </Card>
-      </div>
 
       <div className="container mx-auto max-w-7xl">
         {/* Enhanced Header */}
@@ -451,37 +312,10 @@ const Testimonials = () => {
         </div>
       </div>
 
-      {/* Enhanced Stats Section - Full Width */}
-      <div className="relative min-h-[100vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-          {/* Top Creative Curve */}
-          <div className="absolute top-0 left-0 right-0 transform -translate-y-1">
-            <svg
-              viewBox="0 0 1440 120"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              className="w-full"
-            >
-              <path
-                d="M0 120L48 105C96 90 192 60 288 45C384 30 480 30 576 37.5C672 45 768 60 864 67.5C960 75 1056 75 1152 67.5C1248 60 1344 45 1392 37.5L1440 30V120H1392C1344 120 1248 120 1152 120C1056 120 960 120 864 120C768 120 672 120 576 120C480 120 384 120 288 120C192 120 96 120 48 120H0Z"
-                fill="hsl(var(--background))"
-              />
-              <path
-                d="M0 100L48 90C96 80 192 60 288 50C384 40 480 40 576 45C672 50 768 60 864 65C960 70 1056 70 1152 65C1248 60 1344 50 1392 45L1440 40V120H1392C1344 120 1248 120 1152 120C1056 120 960 120 864 120C768 120 672 120 576 120C480 120 384 120 288 120C192 120 96 120 48 120H0Z"
-                fill="hsl(var(--background))"
-                fillOpacity="0.5"
-              />
-            </svg>
-          </div>
-          {/* Animated Canvas Background */}
-          <canvas
-            ref={canvasRef}
-            className="absolute inset-0 opacity-20"
-          />
-
-          {/* Dynamic Gradient Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-br from-purple-500 via-pink-500 to-red-500 opacity-10 transition-all duration-1000" />
-
-          {/* Enhanced Floating Shapes */}
+ 
+        {/* Footer */}
+        <footer className="relative bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white overflow-hidden">
+          {/* Floating Shapes */}
           <div className="absolute top-10 left-10 w-80 h-80 bg-purple-500/10 rounded-full blur-3xl animate-float-slow" />
           <div className="absolute top-40 right-20 w-60 h-60 bg-pink-500/10 rounded-full blur-3xl animate-float-slower" />
           <div className="absolute bottom-20 left-20 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl animate-float" />
@@ -500,101 +334,6 @@ const Testimonials = () => {
                 }}
               />
             ))}
-          </div>
-
-          <div className="relative z-10">
-            <div className="text-center mb-4 md:mb-9">
-              <h3 className="text-2xl md:text-4xl text-white font-bold mb-3 md:mb-4">
-                Trusted by Creators Worldwide
-              </h3>
-              <p className="text-slate-300 text-sm md:text-lg max-w-2xl mx-auto">
-                Join our growing community of designers, artists, and brands
-              </p>
-            </div>
-
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 text-center">
-              {[
-                { number: "50K+", label: "Happy Customers", icon: Heart, color: "from-red-500 to-pink-500" },
-                { number: "100K+", label: "Designs Created", icon: Sparkles, color: "from-purple-500 to-indigo-500" },
-                { number: "4.9/5", label: "Average Rating", icon: Star, color: "from-amber-500 to-orange-500" },
-                { number: "24h", label: "Fast Delivery", icon: Zap, color: "from-green-500 to-emerald-500" }
-              ].map((stat, index) => (
-                <div key={index} className="group relative flex flex-col items-center">
-                  <div className="relative mb-4">
-                    <div className={`w-20 h-20 md:w-24 md:h-24 rounded-full bg-gradient-to-r ${stat.color} p-1 group-hover:scale-110 transition-transform duration-300 shadow-lg`}>
-                      <div className="w-full h-full rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center">
-                        <stat.icon className="h-6 w-6 md:h-8 md:w-8 text-white" />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="text-2xl md:text-3xl font-bold text-white mb-2">
-                    {stat.number}
-                  </div>
-                  <div className="text-xs md:text-sm text-slate-300 font-medium text-center">
-                    {stat.label}
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Bottom CTA */}
-            <div className="text-center mt-8 md:mt-12">
-              <Button 
-                size="lg"
-                className="bg-white text-slate-900 hover:bg-slate-100 text-base md:text-lg px-6 md:px-8 py-4 md:py-6 rounded-xl md:rounded-2xl shadow-2xl transform hover:scale-105 transition-all duration-300 group"
-              >
-                <span className="flex items-center gap-2 md:gap-3">
-                  Join Our Community
-                  <ArrowRight className="h-4 w-4 md:h-5 md:w-5 transition-transform duration-300 group-hover:translate-x-1" />
-                </span>
-              </Button>
-              <p className="text-slate-400 text-xs md:text-sm mt-4">
-                No credit card required • Start designing in seconds
-              </p>
-            </div>
-          </div>
-        </div>
- 
-        {/* Footer */}
-        <footer className="bg-gradient-to-b from-slate-900 to-slate-950 text-white">
-          {/* Features Bar */}
-          <div className="border-b border-slate-800">
-            <div className="container mx-auto px-4 py-8">
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
-                {[
-                  {
-                    icon: Shield,
-                    title: "Secure Payment",
-                    description: "256-bit SSL encryption"
-                  },
-                  {
-                    icon: Truck,
-                    title: "Free Shipping",
-                    description: "On orders over $50"
-                  },
-                  {
-                    icon: HeadphonesIcon,
-                    title: "24/7 Support",
-                    description: "Live chat & email"
-                  },
-                  {
-                    icon: Sparkles,
-                    title: "Quality Guarantee",
-                    description: "30-day money back"
-                  }
-                ].map((feature, index) => (
-                  <div key={index} className="flex items-center gap-4">
-                    <div className="flex-shrink-0 p-3 rounded-xl bg-white/10 backdrop-blur-sm">
-                      <feature.icon className="h-6 w-6 text-blue-400" />
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-white text-sm">{feature.title}</h4>
-                      <p className="text-slate-400 text-xs">{feature.description}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
           </div>
  
           {/* Main Footer Content */}
@@ -616,26 +355,6 @@ const Testimonials = () => {
                   premium custom products and intuitive design tools.
                 </p>
  
-                {/* Newsletter Signup */}
-                <div className="space-y-4">
-                  <h4 className="font-semibold text-white">Stay Updated</h4>
-                  <div className="flex flex-col sm:flex-row gap-3 max-w-md">
-                    <input
-                      type="email"
-                      placeholder="Enter your email"
-                      className="flex-1 px-4 py-3 rounded-xl bg-white/10 border border-slate-700 placeholder-slate-400 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    />
-                    <Button className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-6 py-3 rounded-xl transition-all duration-300 group">
-                      <span className="flex items-center gap-2">
-                        Subscribe
-                        <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-                      </span>
-                    </Button>
-                  </div>
-                  <p className="text-slate-400 text-sm">
-                    Get the latest updates, design tips, and exclusive offers
-                  </p>
-                </div>
  
                 {/* Contact Info */}
                 <div className="space-y-3 pt-4">
@@ -760,33 +479,6 @@ const Testimonials = () => {
                   <span>Made with</span>
                   <Heart className="h-4 w-4 fill-red-500 text-red-500" />
                   <span>for creators worldwide</span>
-                </div>
-              </div>
-            </div>
-          </div>
- 
-          {/* Trust Badges */}
-          <div className="bg-slate-800/50 border-t border-slate-700">
-            <div className="container mx-auto px-4 py-6">
-              <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-                <div className="flex items-center gap-6 text-slate-400 text-sm">
-                  <span>Trusted by 50,000+ creators</span>
-                  <div className="w-px h-4 bg-slate-700"></div>
-                  <span>4.9/5 ★ Average Rating</span>
-                </div>
- 
-                <div className="flex items-center gap-4">
-                  {/* Payment Methods */}
-                  <div className="flex items-center gap-2 text-slate-400 text-xs">
-                    <span>We accept:</span>
-                    <div className="flex gap-1">
-                      {["Visa", "Mastercard", "PayPal", "Apple Pay"].map((method, index) => (
-                        <span key={index} className="px-2 py-1 bg-white/10 rounded text-slate-300">
-                          {method}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
