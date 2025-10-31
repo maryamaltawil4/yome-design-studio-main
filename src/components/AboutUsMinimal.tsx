@@ -3,9 +3,11 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Sparkles, Palette, Rocket, Users, Zap, Heart, Target, Globe } from "lucide-react";
 import { useRef, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const AboutUsMinimal = () => {
   const navigate = useNavigate();
+  const { t, isRTL } = useLanguage();
   const [mounted, setMounted] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const canvasRef2 = useRef<HTMLCanvasElement>(null);
@@ -165,36 +167,55 @@ const AboutUsMinimal = () => {
   const features = [
     {
       icon: Palette,
-      title: "Creative Freedom",
-      description: "Unleash your imagination with our intuitive design tools",
+      title: t.features.creativeFreedom.title,
+      description: t.features.creativeFreedom.description,
       color: "from-purple-500 to-pink-500",
       delay: 0
     },
     {
       icon: Rocket,
-      title: "Fast Delivery",
-      description: "Get your custom products in 2-3 days worldwide",
+      title: t.features.fastDelivery.title,
+      description: t.features.fastDelivery.description,
       color: "from-blue-500 to-cyan-500",
       delay: 200
     },
     {
       icon: Users,
-      title: "Global Community",
-      description: "Join 50,000+ creators from around the world",
+      title: t.features.globalCommunity.title,
+      description: t.features.globalCommunity.description,
       color: "from-green-500 to-emerald-500",
       delay: 400
     },
     {
       icon: Zap,
-      title: "3D Preview",
-      description: "See your designs come to life before printing",
+      title: t.features.threeDPreview.title,
+      description: t.features.threeDPreview.description,
       color: "from-orange-500 to-red-500",
       delay: 600
     }
   ];
 
   return (
-    <section className="px-4 bg-gradient-to-br from-slate-50 via-blue-50/30 to-purple-50/20 dark:from-slate-900 dark:via-blue-950/20 dark:to-purple-950/10 relative overflow-hidden">
+    <section className="px-4 bg-gradient-to-br from-slate-50 via-purple-50/30 to-slate-50 relative overflow-hidden">
+      {/* Subtle background texture */}
+      <div className="absolute inset-0 opacity-[0.02]">
+        <div className="w-full h-full" style={{
+          backgroundImage: `repeating-conic-gradient(rgba(147, 51, 234, 0.3) 0deg 1deg, transparent 1deg 30deg),
+                          repeating-conic-gradient(rgba(147, 51, 234, 0.3) 0deg 1deg, transparent 1deg 30deg)`,
+          backgroundSize: '100px 100px',
+          backgroundPosition: '0 0, 50px 50px'
+        }} />
+      </div>
+
+      {/* Floating creative elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-24 left-12 w-5 h-5 bg-primary/10 rounded-full animate-pulse" style={{ animationDelay: '0s' }} />
+        <div className="absolute bottom-36 right-16 w-4 h-4 border border-primary/20 rotate-45 animate-bounce" style={{ animationDelay: '1s', animationDuration: '4s' }} />
+        <div className="absolute top-1/3 right-8 w-3 h-3 bg-primary/10 rounded animate-spin" style={{ animationDelay: '2s', animationDuration: '6s' }} />
+        <div className="absolute bottom-24 left-1/4 w-6 h-1 bg-primary/10 rounded animate-pulse" style={{ animationDelay: '0.5s' }} />
+        <div className="absolute top-16 right-1/3 w-2 h-2 bg-primary/10 rounded-full animate-ping" style={{ animationDelay: '1.5s', animationDuration: '3s' }} />
+      </div>
+
       {/* Primary Animated Background Canvas */}
       <canvas
         ref={canvasRef}
@@ -208,13 +229,13 @@ const AboutUsMinimal = () => {
       />
       
       {/* Enhanced Animated Gradient Orbs */}
-      <div className="absolute top-10 left-10 w-72 h-72 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-full blur-3xl animate-float-slow" />
-      <div className="absolute bottom-40 right-10 w-64 h-64 bg-gradient-to-r from-green-500/10 to-emerald-500/10 rounded-full blur-3xl animate-float-slow" />
+      <div className="absolute top-10 left-10 w-72 h-72 bg-gradient-to-r from-purple-600/15 to-pink-600/15 rounded-full blur-3xl animate-float-slow" />
+      <div className="absolute bottom-40 right-10 w-64 h-64 bg-gradient-to-r from-purple-600/15 to-indigo-600/15 rounded-full blur-3xl animate-float-slow" />
       
       {/* New Floating Gradient Shapes */}
-      <div className="absolute top-1/4 left-1/4 w-40 h-40 bg-gradient-to-r from-violet-500/20 to-fuchsia-500/20 rounded-3xl blur-2xl animate-rotate-slow" />
-      <div className="absolute bottom-1/3 right-1/3 w-32 h-32 bg-gradient-to-r from-amber-500/15 to-orange-500/15 rounded-2xl blur-xl animate-rotate" />
-      <div className="absolute top-1/3 right-1/4 w-28 h-28 bg-gradient-to-r from-cyan-500/15 to-blue-500/15 rounded-full blur-xl animate-pulse-slow" />
+      <div className="absolute top-1/4 left-1/4 w-40 h-40 bg-gradient-to-r from-purple-600/20 to-pink-600/20 rounded-3xl blur-2xl animate-rotate-slow" />
+      <div className="absolute bottom-1/3 right-1/3 w-32 h-32 bg-gradient-to-r from-purple-600/15 to-indigo-600/15 rounded-2xl blur-xl animate-rotate" />
+      <div className="absolute top-1/3 right-1/4 w-28 h-28 bg-gradient-to-r from-purple-600/15 to-violet-600/15 rounded-full blur-xl animate-pulse-slow" />
 
       {/* Enhanced Floating Particles */}
       <div className="absolute inset-0">
@@ -258,7 +279,7 @@ const AboutUsMinimal = () => {
               animationDuration: `${15 + Math.random() * 10}s`,
             }}
           >
-            <Icon className="w-8 h-8 opacity-10 text-purple-500" />
+            <Icon className="w-8 h-8 opacity-10 text-purple-600" />
           </div>
         ))}
       </div>
@@ -268,7 +289,7 @@ const AboutUsMinimal = () => {
         {[...Array(8)].map((_, i) => (
           <div
             key={i}
-            className="absolute h-px bg-gradient-to-r from-transparent via-purple-500/30 to-transparent animate-line-sweep"
+            className="absolute h-px bg-gradient-to-r from-transparent via-purple-600/30 to-transparent animate-line-sweep"
             style={{
               top: `${(i + 1) * 12}%`,
               animationDelay: `${i * 0.5}s`,
@@ -285,23 +306,23 @@ const AboutUsMinimal = () => {
           <div className="space-y-6">
             <div className="animate-slide-in-left">
               <h2 className="text-5xl md:text-7xl font-black mb-6 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
-                ABOUT US
+                {t.about.title}
               </h2>
               
-              <div className="w-24 h-1 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full mb-8 animate-width-grow" />
+              <div className="w-24 h-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full mb-8 animate-width-grow" />
             </div>
 
             <div className="space-y-6">
               <p className="text-xl text-slate-700 dark:text-slate-300 leading-relaxed animate-fade-in-up" style={{ animationDelay: '200ms' }}>
                 <span className="font-semibold text-transparent bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text">
-                  Yome is where creativity meets innovation.
-                </span> We're revolutionizing custom product design with cutting-edge technology and unparalleled quality.
+                  {t.about.subtitle1.split('We\'re revolutionizing')[0]}
+                </span>{t.about.subtitle1.split('We\'re revolutionizing')[1]}
               </p>
-              
+
               <p className="text-xl text-slate-700 dark:text-slate-300 leading-relaxed animate-fade-in-up" style={{ animationDelay: '400ms' }}>
-                Our platform empowers artists, entrepreneurs, and creators to transform their visions into 
+                {t.about.subtitle2.split('tangible masterpieces')[0]}
                 <span className="font-semibold text-transparent bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text"> tangible masterpieces </span>
-                with just a few clicks.
+                {t.about.subtitle2.split('tangible masterpieces')[1]}
               </p>
             </div>
 
@@ -310,36 +331,12 @@ const AboutUsMinimal = () => {
               <Button
                 size="lg"
                 onClick={() => navigate("/designer")}
-                className="bg-gradient-primary text-primary-foreground hover:opacity-90 px-8 py-6 text-lg"
+                className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white shadow-lg shadow-purple-500/25 hover:shadow-xl hover:shadow-purple-500/40 px-8 py-6 text-lg transform hover:scale-105 transition-all duration-300"
               >
-                Start Creating Now
+                {t.about.startCreating}
               </Button>
             </div>
 
-            {/* Floating Product Elements in Left Section */}
-            {/* Bag Product */}
-            <div className="absolute top-1/4 right-12 animate-product-float ">
-              <div className="bg-white/90 backdrop-blur-sm rounded-lg p-1 shadow-xl border border-purple-200 animate-bounce-gentle">
-                <img src="/src/assets/jamie-grant-continue-shopping-animation-1-gif.gif" alt="Custom Bag" className="w-20 h-16 rounded" />
-                <div className="text-xs text-center font-semibold text-purple-600 mt-1">Custom Bag</div>
-              </div>
-            </div>
-
-            {/* Cup Product */}
-            <div className="absolute bottom-3/4 right-12 animate-product-float-delayed  ">
-              <div className="bg-white/90  backdrop-blur-sm rounded-lg p-1 shadow-xl border border-blue-200 animate-bounce-gentle">
-                <img src="/src/assets/2f4239_b01946f5a45c47f19c1c5a5eb95a5c21~mv2.gif" alt="Custom Cup" className="w-20 h-16 rounded" />
-                <div className="text-xs text-center font-semibold text-blue-600 mt-1">Custom Cup</div>
-              </div>
-            </div>
-
-            {/* Clothes Product (T-Shirt) */}
-            <div className="absolute bottom-2/4 right-12 animate-product-float-reverse  ">
-              <div className="bg-white/90 backdrop-blur-sm rounded-lg p-1 shadow-xl border border-pink-200 animate-bounce-gentle">
-                <img src="/src/assets/o_1i53rei1tqkmrn51fi0h7b1epa1p.gif" alt="Custom Clothes" className="w-16 h-16 rounded" />
-                <div className="text-xs text-center font-semibold text-pink-600 mt-1">Custom Clothes</div>
-              </div>
-            </div>
           </div>
 
           {/* Right Illustration - Design Studio with Butterflies and Products */}
@@ -396,6 +393,31 @@ const AboutUsMinimal = () => {
                   {/* Large Butterfly */}
                   <div className="animate-butterfly-center">
                     <img src="/src/assets/ue-logo.png" alt="Yome Logo" className="w-48 h-48 rounded-lg shadow-2xl" />
+                  </div>
+
+                  {/* Floating Product Elements - English positioned next to design studio */}
+                  {/* Bag Product */}
+                  <div className="absolute -top-8 -right-40 animate-product-float">
+                    <div className="bg-white/90 backdrop-blur-sm rounded-lg p-1 shadow-xl border border-purple-200 animate-bounce-gentle">
+                      <img src="/src/assets/jamie-grant-continue-shopping-animation-1-gif.gif" alt="Custom Bag" className="w-20 h-16 rounded" />
+                      <div className="text-xs text-center font-semibold text-purple-600 mt-1">Custom Bag</div>
+                    </div>
+                  </div>
+
+                  {/* Cup Product */}
+                  <div className="absolute -bottom-30 -right-40 animate-product-float-delayed">
+                    <div className="bg-white/90 backdrop-blur-sm rounded-lg p-1 shadow-xl border border-blue-200 animate-bounce-gentle">
+                      <img src="/src/assets/2f4239_b01946f5a45c47f19c1c5a5eb95a5c21~mv2.gif" alt="Custom Cup" className="w-20 h-16 rounded" />
+                      <div className="text-xs text-center font-semibold text-blue-600 mt-1">Custom Cup</div>
+                    </div>
+                  </div>
+
+                  {/* Clothes Product (T-Shirt) */}
+                  <div className="absolute top-1/3 -right-40 animate-product-float-reverse">
+                    <div className="bg-white/90 backdrop-blur-sm rounded-lg p-1 shadow-xl border border-pink-200 animate-bounce-gentle">
+                      <img src="/src/assets/o_1i53rei1tqkmrn51fi0h7b1epa1p.gif" alt="Custom Clothes" className="w-16 h-16 rounded" />
+                      <div className="text-xs text-center font-semibold text-pink-600 mt-1">Custom Clothes</div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -518,8 +540,8 @@ const AboutUsMinimal = () => {
             <div className="absolute inset-0 opacity-10">
               <div className="w-full h-full" style={{
                 backgroundImage: `
-                  linear-gradient(rgba(139, 92, 246, 0.3) 1px, transparent 1px),
-                  linear-gradient(90deg, rgba(139, 92, 246, 0.3) 1px, transparent 1px)
+                  linear-gradient(rgba(147, 51, 234, 0.3) 1px, transparent 1px),
+                  linear-gradient(90deg, rgba(147, 51, 234, 0.3) 1px, transparent 1px)
                 `,
                 backgroundSize: '40px 40px',
                 animation: 'grid-move 30s linear infinite'

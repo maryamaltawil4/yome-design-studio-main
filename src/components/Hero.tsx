@@ -2,11 +2,13 @@ import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Sparkles, Play, Star } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useLanguage } from "@/contexts/LanguageContext";
 import heroProducts from "@/assets/hero-products.jpg";
 
 
 const Hero = () => {
   const navigate = useNavigate();
+  const { t, isRTL } = useLanguage();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [currentImageSlide, setCurrentImageSlide] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
@@ -16,17 +18,17 @@ const Hero = () => {
     {
       title: "Design Your Dreams",
       subtitle: "Create custom apparel that tells your story",
-      gradient: "from-purple-500 via-pink-500 to-red-500",
+      gradient: "from-purple-600 via-pink-600 to-red-600",
     },
     {
       title: "Unleash Creativity",
       subtitle: "Professional design tools at your fingertips",
-      gradient: "from-blue-500 via-cyan-500 to-green-500",
+      gradient: "from-purple-600 via-violet-600 to-blue-600",
     },
     {
       title: "Print Perfection",
       subtitle: "High-quality printing on premium products",
-      gradient: "from-orange-500 via-yellow-500 to-amber-500",
+      gradient: "from-purple-600 via-indigo-600 to-cyan-600",
     },
   ];
 
@@ -120,7 +122,7 @@ const Hero = () => {
 
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-900 via-purple-900/80 to-slate-900">
       {/* Animated Canvas Background */}
       <canvas
         ref={canvasRef}
@@ -131,10 +133,10 @@ const Hero = () => {
       <div className={`absolute inset-0 bg-gradient-to-br ${slides[currentSlide].gradient} opacity-10 transition-all duration-1000`} />
 
       {/* Enhanced Floating Shapes */}
-      <div className="absolute top-10 left-10 w-80 h-80 bg-purple-500/10 rounded-full blur-3xl animate-float-slow" />
-      <div className="absolute top-40 right-20 w-60 h-60 bg-pink-500/10 rounded-full blur-3xl animate-float-slower" />
-      <div className="absolute bottom-20 left-20 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl animate-float" />
-      <div className="absolute bottom-40 right-10 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-float-slow" />
+      <div className="absolute top-10 left-10 w-80 h-80 bg-purple-600/15 rounded-full blur-3xl animate-float-slow" />
+      <div className="absolute top-40 right-20 w-60 h-60 bg-pink-600/15 rounded-full blur-3xl animate-float-slower" />
+      <div className="absolute bottom-20 left-20 w-72 h-72 bg-violet-600/15 rounded-full blur-3xl animate-float" />
+      <div className="absolute bottom-40 right-10 w-96 h-96 bg-indigo-600/15 rounded-full blur-3xl animate-float-slow" />
 
       {/* Animated Stars */}
       <div className="absolute inset-0">
@@ -154,7 +156,7 @@ const Hero = () => {
       <div className="container mx-auto px-4 relative z-10">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Content */}
-          <div className="text-center lg:text-left space-y-8">
+          <div className={`text-center lg:text-left space-y-8 ${isRTL ? 'lg:text-right' : ''}`}>
             {/* <div className="inline-block animate-bounce-slow">
               <span className="px-8 py-4 bg-gradient-to-r from-white/10 to-white/20 backdrop-blur-lg rounded-full text-white font-bold border border-white/30 shadow-2xl flex items-center gap-3 text-lg tracking-wide">
                 <Sparkles className="h-5 w-5 animate-spin-slow" />
@@ -166,27 +168,27 @@ const Hero = () => {
             <div className="space-y-6">
               <div className="relative">
                 <h1 className="text-4xl md:text-6xl font-black text-white leading-tight bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent animate-gradient">
-                  {slides[currentSlide].title}
+                  {t.hero[`title${currentSlide + 1}` as keyof typeof t.hero]}
                 </h1>
               </div>
-              
+
               <p className="text-2xl md:text-3xl text-white/80 font-light leading-relaxed">
-                {slides[currentSlide].subtitle}
+                {t.hero[`subtitle${currentSlide + 1}` as keyof typeof t.hero]}
               </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-6 justify-center lg:justify-start">
-              <Button 
-                size="lg" 
+            <div className={`flex flex-col sm:flex-row gap-6 justify-center lg:justify-start ${isRTL ? 'lg:justify-end' : ''}`}>
+              <Button
+                size="lg"
                 onClick={() => navigate("/designer")}
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}
-                className="relative bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700 shadow-2xl text-xl px-10 py-7 rounded-2xl border-0 transform hover:scale-105 transition-all duration-300 group overflow-hidden"
+                className="relative bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700 shadow-2xl shadow-purple-500/25 text-xl px-10 py-7 rounded-2xl border-0 transform hover:scale-105 hover:shadow-3xl hover:shadow-purple-500/40 transition-all duration-300 group overflow-hidden"
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 <span className="relative flex items-center gap-3">
-                  Start Designing 
-                  <ArrowRight className={`h-6 w-6 transition-transform duration-300 ${isHovered ? 'translate-x-1' : ''}`} />
+                  {t.hero.startDesigning}
+                  <ArrowRight className={`h-6 w-6 transition-transform duration-300 ${isHovered ? (isRTL ? '-translate-x-1' : 'translate-x-1') : ''}`} />
                 </span>
               </Button>
               
@@ -197,13 +199,13 @@ const Hero = () => {
               >
                 <span className="flex items-center gap-3">
                   <Play className="h-5 w-5" />
-                  Watch Demo
+                  {t.hero.watchDemo}
                 </span>
               </Button>
             </div>
 
             {/* Enhanced Slide Indicators */}
-            <div className="flex gap-3 justify-center lg:justify-start items-center">
+            <div className={`flex gap-3 justify-center lg:justify-start items-center ${isRTL ? 'lg:justify-end' : ''}`}>
               {slides.map((_, index) => (
                 <button
                   key={index}
@@ -229,7 +231,7 @@ const Hero = () => {
           {/* Enhanced Product Image */}
           <div className="relative group">
             {/* Glow Effect */}
-            <div className="absolute -inset-4 bg-gradient-to-r from-purple-600 to-pink-600 rounded-3xl blur-2xl opacity-30 group-hover:opacity-50 transition-opacity duration-500" />
+            <div className="absolute -inset-4 bg-gradient-to-r from-purple-600 to-pink-600 rounded-3xl blur-2xl opacity-40 group-hover:opacity-60 transition-opacity duration-500 animate-pulse" />
             
             {/* Main Image Container */}
             <div className="relative z-10 transform group-hover:scale-105 transition-transform duration-700">
@@ -249,8 +251,8 @@ const Hero = () => {
               </div>
               
               {/* Floating Elements */}
-              <div className="absolute -top-4 -right-4 bg-yellow-400 text-black px-4 py-2 rounded-full font-bold shadow-lg animate-bounce">
-                <Star className="h-4 w-4 inline mr-1" />
+              <div className="absolute -top-4 -right-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-full font-bold shadow-lg shadow-purple-500/30 animate-bounce hover:scale-110 transition-transform duration-300">
+                <Star className="h-4 w-4 inline mr-1 animate-spin" />
                 New!
               </div>
               

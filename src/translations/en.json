@@ -1,0 +1,84 @@
+{
+  "nav": {
+    "products": "Products",
+    "designs": "Designs",
+    "features": "Features",
+    "startDesigning": "Start Designing"
+  },
+  "hero": {
+    "title1": "Design Your Dreams",
+    "title2": "Unleash Creativity",
+    "title3": "Print Perfection",
+    "subtitle1": "Create custom apparel that tells your story",
+    "subtitle2": "Professional design tools at your fingertips",
+    "subtitle3": "High-quality printing on premium products",
+    "startDesigning": "Start Designing",
+    "watchDemo": "Watch Demo"
+  },
+  "about": {
+    "title": "ABOUT US",
+    "subtitle1": "Yome is where creativity meets innovation. We're revolutionizing custom product design with cutting-edge technology and unparalleled quality.",
+    "subtitle2": "Our platform empowers artists, entrepreneurs, and creators to transform their visions into tangible masterpieces with just a few clicks.",
+    "startCreating": "Start Creating Now"
+  },
+  "features": {
+    "creativeFreedom": {
+      "title": "Creative Freedom",
+      "description": "Unleash your imagination with our intuitive design tools"
+    },
+    "fastDelivery": {
+      "title": "Fast Delivery",
+      "description": "Get your custom products in 2-3 days worldwide"
+    },
+    "globalCommunity": {
+      "title": "Global Community",
+      "description": "Join 50,000+ creators from around the world"
+    },
+    "threeDPreview": {
+      "title": "3D Preview",
+      "description": "See your designs come to life before printing"
+    }
+  },
+  "products": {
+    "title": "Choose Your Canvas",
+    "subtitle": "Select from our premium collection and transform your ideas into wearable art with stunning quality",
+    "tshirt": {
+      "name": "Premium T-Shirts",
+      "description": "100% combed cotton, perfect for vibrant designs"
+    },
+    "hoodie": {
+      "name": "Cozy Hoodies",
+      "description": "Premium fleece with unmatched comfort"
+    },
+    "cup": {
+      "name": "Ceramic Mugs",
+      "description": "Dishwasher-safe with vibrant print quality"
+    },
+    "bag": {
+      "name": "Canvas Totes",
+      "description": "Eco-friendly & durable for everyday use"
+    },
+    "customize": "Customize",
+    "viewAll": "View All Products"
+  },
+  "designs": {
+    "title": "Designer Collection",
+    "subtitle": "Premium templates crafted by professional designers with unmatched quality",
+    "useTemplate": "Use Template",
+    "viewAllTemplates": "View All Templates"
+  },
+  "testimonials": {
+    "headerBadge": "Loved by Creators Worldwide",
+    "title": "Loved by Creative Minds",
+    "subtitle": "Join 50,000+ creators who trust Yome for their custom products"
+  },
+  "footer": {
+    "about": "About",
+    "contact": "Contact",
+    "privacy": "Privacy",
+    "terms": "Terms",
+    "followUs": "Follow us:",
+    "madeWith": "Made with",
+    "forCreators": "for creators"
+  }
+}

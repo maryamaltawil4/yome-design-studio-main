@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Sparkles, ArrowRight, Star, Zap, Heart } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useLanguage } from "@/contexts/LanguageContext";
 import tshirtImg from "@/assets/product-tshirt.jpg";
 import hoodieImg from "@/assets/product-hoodie.jpg";
 import cupImg from "@/assets/product-cup.jpg";
@@ -11,61 +12,157 @@ import bagImg from "@/assets/product-bag.jpg";
 const products = [
   {
     id: "tshirt",
-    name: "Premium T-Shirts",
-    description: "100% combed cotton, perfect for vibrant designs",
+    nameKey: "tshirt",
+    descriptionKey: "tshirt",
     price: "From $19.99",
     originalPrice: "$24.99",
     image: tshirtImg,
     rating: 4.8,
     reviews: 1247,
     tags: ["Bestseller", "New"],
-    gradient: "from-blue-500 to-purple-600",
+    gradient: "from-purple-600 to-violet-600",
   },
   {
     id: "hoodie",
-    name: "Cozy Hoodies",
-    description: "Premium fleece with unmatched comfort",
+    nameKey: "hoodie",
+    descriptionKey: "hoodie",
     price: "From $39.99",
     originalPrice: "$49.99",
     image: hoodieImg,
     rating: 4.9,
     reviews: 892,
     tags: ["Trending", "Limited"],
-    gradient: "from-orange-500 to-red-600",
+    gradient: "from-purple-600 to-indigo-600",
   },
   {
     id: "cup",
-    name: "Ceramic Mugs",
-    description: "Dishwasher-safe with vibrant print quality",
+    nameKey: "cup",
+    descriptionKey: "cup",
     price: "From $12.99",
     originalPrice: "$16.99",
     image: cupImg,
     rating: 4.7,
     reviews: 567,
     tags: ["Popular"],
-    gradient: "from-green-500 to-teal-600",
+    gradient: "from-purple-600 to-cyan-600",
   },
   {
     id: "bag",
-    name: "Canvas Totes",
-    description: "Eco-friendly & durable for everyday use",
+    nameKey: "bag",
+    descriptionKey: "bag",
     price: "From $14.99",
     originalPrice: "$19.99",
     image: bagImg,
     rating: 4.6,
     reviews: 423,
     tags: ["Eco", "New"],
-    gradient: "from-pink-500 to-rose-600",
+    gradient: "from-purple-600 to-pink-600",
   },
 ];
 
 const ProductShowcase = () => {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [hoveredProduct, setHoveredProduct] = useState<string | null>(null);
 
   return (
-    <section className="py-4 px-4 bg-gradient-to-b from-background to-slate-50/50 dark:to-slate-900/30">
-      <div className="container mx-auto">
+    <section className="py-4 px-4 bg-gradient-to-br from-slate-50 via-purple-50/30 to-slate-50 relative overflow-hidden">
+      {/* Subtle background texture */}
+      <div className="absolute inset-0 opacity-[0.02]">
+        <div className="w-full h-full" style={{
+          backgroundImage: `repeating-conic-gradient(hsl(var(--primary)) 0deg 1deg, transparent 1deg 30deg),
+                           repeating-conic-gradient(hsl(var(--primary)) 0deg 1deg, transparent 1deg 30deg)`,
+          backgroundSize: '100px 100px',
+          backgroundPosition: '0 0, 50px 50px'
+        }} />
+      </div>
+
+      {/* Floating creative elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-24 left-12 w-5 h-5 bg-primary/10 rounded-full animate-pulse" style={{ animationDelay: '0s' }} />
+        <div className="absolute bottom-36 right-16 w-4 h-4 border border-primary/20 rotate-45 animate-bounce" style={{ animationDelay: '1s', animationDuration: '4s' }} />
+        <div className="absolute top-1/3 right-8 w-3 h-3 bg-primary/10 rounded animate-spin" style={{ animationDelay: '2s', animationDuration: '6s' }} />
+        <div className="absolute bottom-24 left-1/4 w-6 h-1 bg-primary/10 rounded animate-pulse" style={{ animationDelay: '0.5s' }} />
+        <div className="absolute top-16 right-1/3 w-2 h-2 bg-primary/10 rounded-full animate-ping" style={{ animationDelay: '1.5s', animationDuration: '3s' }} />
+      </div>
+
+      {/* Primary Animated Background Canvas */}
+      <canvas
+        className="absolute inset-0 w-full h-full opacity-20"
+      />
+
+      {/* Enhanced Animated Gradient Orbs */}
+      <div className="absolute top-10 left-10 w-72 h-72 bg-gradient-to-r from-purple-600/15 to-pink-600/15 rounded-full blur-3xl animate-float-slow" />
+      <div className="absolute bottom-40 right-10 w-64 h-64 bg-gradient-to-r from-purple-600/15 to-indigo-600/15 rounded-full blur-3xl animate-float-slow" />
+
+      {/* New Floating Gradient Shapes */}
+      <div className="absolute top-1/4 left-1/4 w-40 h-40 bg-gradient-to-r from-purple-600/20 to-pink-600/20 rounded-3xl blur-2xl animate-rotate-slow" />
+      <div className="absolute bottom-1/3 right-1/3 w-32 h-32 bg-gradient-to-r from-purple-600/15 to-indigo-600/15 rounded-2xl blur-xl animate-rotate" />
+      <div className="absolute top-1/3 right-1/4 w-28 h-28 bg-gradient-to-r from-purple-600/15 to-violet-600/15 rounded-full blur-xl animate-pulse-slow" />
+
+      {/* Enhanced Floating Particles */}
+      <div className="absolute inset-0">
+        {[...Array(20)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute w-2 h-2 rounded-full animate-float-random"
+            style={{
+              background: `hsl(${Math.random() * 360}, 70%, 60%)`,
+              top: `${Math.random() * 100}%`,
+              left: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 5}s`,
+              animationDuration: `${Math.random() * 10 + 10}s`,
+            }}
+          />
+        ))}
+      </div>
+
+      {/* New Animated Grid Pattern */}
+      <div className="absolute inset-0 opacity-5">
+        <div className="w-full h-full" style={{
+          backgroundImage: `
+            linear-gradient(rgba(147, 51, 234, 0.3) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(147, 51, 234, 0.3) 1px, transparent 1px)
+          `,
+          backgroundSize: '50px 50px',
+          animation: 'grid-move 20s linear infinite'
+        }} />
+      </div>
+
+      {/* New Floating Icons */}
+      <div className="absolute inset-0">
+        {[Sparkles, Star].map((Icon, index) => (
+          <div
+            key={index}
+            className="absolute animate-float-icon"
+            style={{
+              top: `${20 + Math.random() * 60}%`,
+              left: `${10 + Math.random() * 80}%`,
+              animationDelay: `${index * 2}s`,
+              animationDuration: `${15 + Math.random() * 10}s`,
+            }}
+          >
+            <Icon className="w-8 h-8 opacity-10 text-purple-600" />
+          </div>
+        ))}
+      </div>
+
+      {/* New Animated Lines */}
+      <div className="absolute inset-0 overflow-hidden">
+        {[...Array(8)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute h-px bg-gradient-to-r from-transparent via-purple-600/30 to-transparent animate-line-sweep"
+            style={{
+              top: `${(i + 1) * 12}%`,
+              animationDelay: `${i * 0.5}s`,
+              animationDuration: `${8 + i * 2}s`,
+            }}
+          />
+        ))}
+      </div>
+
+      <div className="container mx-auto relative z-10">
         {/* Enhanced Header */}
         <div className="text-center mb-20">
           {/* <div className="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full text-white mb-6 shadow-lg animate-pulse-slow">
@@ -74,12 +171,12 @@ const ProductShowcase = () => {
             <Sparkles className="h-5 w-5" />
           </div> */}
           <h2 className="text-5xl md:text-7xl font-black mb-6 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
-            Choose Your Canvas
+            {t.products.title}
           </h2>
           <p className="text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            Select from our premium collection and transform your ideas into 
-            <span className="font-semibold text-transparent bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text"> wearable art </span>
-            with stunning quality
+            {t.products.subtitle.split('wearable art')[0]}
+            <span className="font-semibold text-transparent bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text animate-gradient-x"> wearable art </span>
+            {t.products.subtitle.split('wearable art')[1]}
           </p>
         </div>
 
@@ -128,7 +225,7 @@ const ProductShowcase = () => {
               <div className="relative overflow-hidden aspect-square bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-700">
                 <img
                   src={product.image}
-                  alt={product.name}
+                  alt={(t.products[product.nameKey as keyof typeof t.products] as any).name}
                   className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:rotate-1"
                 />
                 
@@ -170,10 +267,10 @@ const ProductShowcase = () => {
                 {/* Product Name & Description */}
                 <div className="space-y-3">
                   <h3 className="text-xl font-bold text-foreground group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-purple-600 group-hover:to-pink-600 group-hover:bg-clip-text transition-all duration-300">
-                    {product.name}
+                    {(t.products[product.nameKey as keyof typeof t.products] as any).name}
                   </h3>
                   <p className="text-muted-foreground leading-relaxed">
-                    {product.description}
+                    {(t.products[product.descriptionKey as keyof typeof t.products] as any).description}
                   </p>
                 </div>
 
@@ -196,10 +293,10 @@ const ProductShowcase = () => {
                   
                   <Button
                     onClick={() => navigate(`/designer?product=${product.id}`)}
-                    className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 group/btn relative overflow-hidden"
+                    className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white shadow-lg shadow-purple-500/25 hover:shadow-xl hover:shadow-purple-500/40 transition-all duration-300 group/btn relative overflow-hidden"
                   >
                     <span className="relative z-10 flex items-center gap-2">
-                      Customize
+                      {t.products.customize}
                     </span>
                     <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300" />
                   </Button>
@@ -223,7 +320,7 @@ const ProductShowcase = () => {
             onClick={() => navigate("/products")}
           >
             <span className="flex items-center gap-3">
-              View All Products
+              {t.products.viewAll}
               <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
             </span>
           </Button>
