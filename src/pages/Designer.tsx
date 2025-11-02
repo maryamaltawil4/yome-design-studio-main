@@ -1,17 +1,30 @@
 import { useState, useRef, useEffect } from "react";
-import { Canvas as FabricCanvas, FabricImage, IText, Circle, Rect } from "fabric";
+import {
+  Canvas as FabricCanvas,
+  FabricImage,
+  IText,
+  Circle,
+  Rect,
+  Control,
+} from "fabric";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { 
-  Type, 
-  Image as ImageIcon, 
-  Download, 
-  Save, 
-  Trash2, 
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  Type,
+  Image as ImageIcon,
+  Download,
+  Save,
+  Trash2,
   Upload,
   Sparkles,
   Palette as PaletteIcon,
@@ -30,7 +43,7 @@ import {
   RefreshCw,
   Eye,
   RotateCcw,
-  AlertCircle
+  AlertCircle,
 } from "lucide-react";
 import { toast } from "sonner";
 import { HexColorPicker } from "react-colorful";
@@ -51,9 +64,19 @@ const products = {
     description: "100% Cotton • Available in all sizes",
     views: [
       { id: "front", name: "Front", image: productTshirt },
-      { id: "back", name: "Back", image: "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=400&h=400&fit=crop" },
-      { id: "side", name: "Side", image: "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=400&h=400&fit=crop" }
-    ]
+      {
+        id: "back",
+        name: "Back",
+        image:
+          "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=400&h=400&fit=crop",
+      },
+      {
+        id: "side",
+        name: "Side",
+        image:
+          "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=400&h=400&fit=crop",
+      },
+    ],
   },
   bag: {
     id: "bag",
@@ -62,9 +85,19 @@ const products = {
     description: "Durable canvas • Perfect for everyday use",
     views: [
       { id: "front", name: "Front", image: productBag },
-      { id: "back", name: "Back", image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400&h=400&fit=crop" },
-      { id: "side", name: "Side", image: "https://images.unsplash.com/photo-1594223274512-ad4803739b7c?w=400&h=400&fit=crop" }
-    ]
+      {
+        id: "back",
+        name: "Back",
+        image:
+          "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400&h=400&fit=crop",
+      },
+      {
+        id: "side",
+        name: "Side",
+        image:
+          "https://images.unsplash.com/photo-1594223274512-ad4803739b7c?w=400&h=400&fit=crop",
+      },
+    ],
   },
   cup: {
     id: "cup",
@@ -73,9 +106,19 @@ const products = {
     description: "High-quality ceramic • Dishwasher safe",
     views: [
       { id: "front", name: "Front", image: productCup },
-      { id: "back", name: "Back", image: "https://images.unsplash.com/photo-1514228742587-6b1558fcf93a?w=400&h=400&fit=crop" },
-      { id: "side", name: "Side", image: "https://images.unsplash.com/photo-1544787219-7f47ccb76574?w=400&h=400&fit=crop" }
-    ]
+      {
+        id: "back",
+        name: "Back",
+        image:
+          "https://images.unsplash.com/photo-1514228742587-6b1558fcf93a?w=400&h=400&fit=crop",
+      },
+      {
+        id: "side",
+        name: "Side",
+        image:
+          "https://images.unsplash.com/photo-1544787219-7f47ccb76574?w=400&h=400&fit=crop",
+      },
+    ],
   },
   hoodie: {
     id: "hoodie",
@@ -84,123 +127,851 @@ const products = {
     description: "Cozy fleece • Available in all sizes",
     views: [
       { id: "front", name: "Front", image: productHoodie },
-      { id: "back", name: "Back", image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=400&fit=crop" },
-      { id: "side", name: "Side", image: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=400&h=400&fit=crop" }
-    ]
-  }
+      {
+        id: "back",
+        name: "Back",
+        image:
+          "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=400&fit=crop",
+      },
+      {
+        id: "side",
+        name: "Side",
+        image:
+          "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=400&h=400&fit=crop",
+      },
+    ],
+  },
 };
 
 // Expanded templates library
 const templates = [
   // Text Templates
-  { id: "text-1", name: "Minimalist Quote", category: "Text", premium: false, thumbnail: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=200&h=200&fit=crop", elements: [{ type: "text", content: "Live Your Dream", fontSize: 32, color: "#000000", x: 150, y: 200 }] },
-  { id: "text-2", name: "Motivational", category: "Text", premium: false, thumbnail: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=200&h=200&fit=crop", elements: [{ type: "text", content: "Be Yourself", fontSize: 28, color: "#8B5CF6", x: 160, y: 180 }] },
-  { id: "text-3", name: "Bold Statement", category: "Text", premium: true, thumbnail: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=200&h=200&fit=crop", elements: [{ type: "text", content: "DREAM BIG", fontSize: 36, color: "#EF4444", x: 140, y: 200 }] },
-  { id: "text-4", name: "Script Style", category: "Text", premium: true, thumbnail: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=200&h=200&fit=crop", elements: [{ type: "text", content: "Elegant", fontSize: 30, color: "#10B981", x: 170, y: 190 }] },
-  
+  {
+    id: "text-1",
+    name: "Minimalist Quote",
+    category: "Text",
+    premium: false,
+    thumbnail:
+      "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=200&h=200&fit=crop",
+    elements: [
+      {
+        type: "text",
+        content: "Live Your Dream",
+        fontSize: 32,
+        color: "#000000",
+        x: 150,
+        y: 200,
+      },
+    ],
+  },
+  {
+    id: "text-2",
+    name: "Motivational",
+    category: "Text",
+    premium: false,
+    thumbnail:
+      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=200&h=200&fit=crop",
+    elements: [
+      {
+        type: "text",
+        content: "Be Yourself",
+        fontSize: 28,
+        color: "#8B5CF6",
+        x: 160,
+        y: 180,
+      },
+    ],
+  },
+  {
+    id: "text-3",
+    name: "Bold Statement",
+    category: "Text",
+    premium: true,
+    thumbnail:
+      "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=200&h=200&fit=crop",
+    elements: [
+      {
+        type: "text",
+        content: "DREAM BIG",
+        fontSize: 36,
+        color: "#EF4444",
+        x: 140,
+        y: 200,
+      },
+    ],
+  },
+  {
+    id: "text-4",
+    name: "Script Style",
+    category: "Text",
+    premium: true,
+    thumbnail:
+      "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=200&h=200&fit=crop",
+    elements: [
+      {
+        type: "text",
+        content: "Elegant",
+        fontSize: 30,
+        color: "#10B981",
+        x: 170,
+        y: 190,
+      },
+    ],
+  },
+
   // Graphics Templates
-  { id: "graphic-1", name: "Nature Scene", category: "Graphics", premium: false, thumbnail: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=200&h=200&fit=crop", elements: [{ type: "image", url: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=300&h=300&fit=crop", x: 100, y: 100 }, { type: "text", content: "Nature", fontSize: 24, color: "#10B981", x: 200, y: 300 }] },
-  { id: "graphic-2", name: "Abstract Art", category: "Graphics", premium: false, thumbnail: "https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=200&h=200&fit=crop", elements: [{ type: "shape", shape: "rect", width: 100, height: 100, color: "#EF4444", x: 150, y: 150 }, { type: "shape", shape: "circle", radius: 50, color: "#F59E0B", x: 200, y: 200 }] },
-  { id: "graphic-3", name: "Urban Style", category: "Graphics", premium: true, thumbnail: "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=200&h=200&fit=crop", elements: [{ type: "image", url: "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=300&h=300&fit=crop", x: 100, y: 100 }, { type: "text", content: "Urban", fontSize: 28, color: "#FFFFFF", x: 180, y: 250 }] },
-  { id: "graphic-4", name: "Space Theme", category: "Graphics", premium: true, thumbnail: "https://images.unsplash.com/photo-1446776877081-d282a0f896e2?w=200&h=200&fit=crop", elements: [{ type: "image", url: "https://images.unsplash.com/photo-1446776877081-d282a0f896e2?w=300&h=300&fit=crop", x: 100, y: 100 }, { type: "text", content: "Galaxy", fontSize: 26, color: "#8B5CF6", x: 190, y: 280 }] },
-  
+  {
+    id: "graphic-1",
+    name: "Nature Scene",
+    category: "Graphics",
+    premium: false,
+    thumbnail:
+      "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=200&h=200&fit=crop",
+    elements: [
+      {
+        type: "image",
+        url: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=300&h=300&fit=crop",
+        x: 100,
+        y: 100,
+      },
+      {
+        type: "text",
+        content: "Nature",
+        fontSize: 24,
+        color: "#10B981",
+        x: 200,
+        y: 300,
+      },
+    ],
+  },
+  {
+    id: "graphic-2",
+    name: "Abstract Art",
+    category: "Graphics",
+    premium: false,
+    thumbnail:
+      "https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=200&h=200&fit=crop",
+    elements: [
+      {
+        type: "shape",
+        shape: "rect",
+        width: 100,
+        height: 100,
+        color: "#EF4444",
+        x: 150,
+        y: 150,
+      },
+      {
+        type: "shape",
+        shape: "circle",
+        radius: 50,
+        color: "#F59E0B",
+        x: 200,
+        y: 200,
+      },
+    ],
+  },
+  {
+    id: "graphic-3",
+    name: "Urban Style",
+    category: "Graphics",
+    premium: true,
+    thumbnail:
+      "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=200&h=200&fit=crop",
+    elements: [
+      {
+        type: "image",
+        url: "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=300&h=300&fit=crop",
+        x: 100,
+        y: 100,
+      },
+      {
+        type: "text",
+        content: "Urban",
+        fontSize: 28,
+        color: "#FFFFFF",
+        x: 180,
+        y: 250,
+      },
+    ],
+  },
+  {
+    id: "graphic-4",
+    name: "Space Theme",
+    category: "Graphics",
+    premium: true,
+    thumbnail:
+      "https://images.unsplash.com/photo-1446776877081-d282a0f896e2?w=200&h=200&fit=crop",
+    elements: [
+      {
+        type: "image",
+        url: "https://images.unsplash.com/photo-1446776877081-d282a0f896e2?w=300&h=300&fit=crop",
+        x: 100,
+        y: 100,
+      },
+      {
+        type: "text",
+        content: "Galaxy",
+        fontSize: 26,
+        color: "#8B5CF6",
+        x: 190,
+        y: 280,
+      },
+    ],
+  },
+
   // Logo Templates
-  { id: "logo-1", name: "Modern Logo", category: "Logo", premium: false, thumbnail: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=200&h=200&fit=crop", elements: [{ type: "shape", shape: "circle", radius: 60, color: "#8B5CF6", x: 170, y: 170 }, { type: "text", content: "LOGO", fontSize: 20, color: "#FFFFFF", x: 150, y: 200 }] },
-  { id: "logo-2", name: "Geometric Logo", category: "Logo", premium: true, thumbnail: "https://images.unsplash.com/photo-1557683316-973673baf926?w=200&h=200&fit=crop", elements: [{ type: "shape", shape: "rect", width: 80, height: 80, color: "#10B981", x: 160, y: 160 }, { type: "text", content: "GEO", fontSize: 18, color: "#FFFFFF", x: 175, y: 200 }] },
-  
+  {
+    id: "logo-1",
+    name: "Modern Logo",
+    category: "Logo",
+    premium: false,
+    thumbnail:
+      "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=200&h=200&fit=crop",
+    elements: [
+      {
+        type: "shape",
+        shape: "circle",
+        radius: 60,
+        color: "#8B5CF6",
+        x: 170,
+        y: 170,
+      },
+      {
+        type: "text",
+        content: "LOGO",
+        fontSize: 20,
+        color: "#FFFFFF",
+        x: 150,
+        y: 200,
+      },
+    ],
+  },
+  {
+    id: "logo-2",
+    name: "Geometric Logo",
+    category: "Logo",
+    premium: true,
+    thumbnail:
+      "https://images.unsplash.com/photo-1557683316-973673baf926?w=200&h=200&fit=crop",
+    elements: [
+      {
+        type: "shape",
+        shape: "rect",
+        width: 80,
+        height: 80,
+        color: "#10B981",
+        x: 160,
+        y: 160,
+      },
+      {
+        type: "text",
+        content: "GEO",
+        fontSize: 18,
+        color: "#FFFFFF",
+        x: 175,
+        y: 200,
+      },
+    ],
+  },
+
   // Pattern Templates
-  { id: "pattern-1", name: "Floral Pattern", category: "Pattern", premium: false, thumbnail: "https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=200&h=200&fit=crop", elements: [{ type: "image", url: "https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=200&h=200&fit=crop", x: 100, y: 100 }] },
-  { id: "pattern-2", name: "Geometric Pattern", category: "Pattern", premium: true, thumbnail: "https://images.unsplash.com/photo-1557683316-973673baf926?w=200&h=200&fit=crop", elements: [{ type: "image", url: "https://images.unsplash.com/photo-1557683316-973673baf926?w=200&h=200&fit=crop", x: 100, y: 100 }] }
+  {
+    id: "pattern-1",
+    name: "Floral Pattern",
+    category: "Pattern",
+    premium: false,
+    thumbnail:
+      "https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=200&h=200&fit=crop",
+    elements: [
+      {
+        type: "image",
+        url: "https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=200&h=200&fit=crop",
+        x: 100,
+        y: 100,
+      },
+    ],
+  },
+  {
+    id: "pattern-2",
+    name: "Geometric Pattern",
+    category: "Pattern",
+    premium: true,
+    thumbnail:
+      "https://images.unsplash.com/photo-1557683316-973673baf926?w=200&h=200&fit=crop",
+    elements: [
+      {
+        type: "image",
+        url: "https://images.unsplash.com/photo-1557683316-973673baf926?w=200&h=200&fit=crop",
+        x: 100,
+        y: 100,
+      },
+    ],
+  },
 ];
 
 // Expanded image categories
 const imageCategories = {
-  "Nature": [
-    { id: "nature-1", name: "Forest", url: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=200&h=200&fit=crop" },
-    { id: "nature-2", name: "Mountains", url: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=200&h=200&fit=crop" },
-    { id: "nature-3", name: "Ocean", url: "https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=200&h=200&fit=crop" },
-    { id: "nature-4", name: "Sunset", url: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=200&h=200&fit=crop" },
-    { id: "nature-5", name: "Flowers", url: "https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=200&h=200&fit=crop" },
-    { id: "nature-6", name: "Trees", url: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=200&h=200&fit=crop" }
+  Nature: [
+    {
+      id: "nature-1",
+      name: "Forest",
+      url: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=200&h=200&fit=crop",
+    },
+    {
+      id: "nature-2",
+      name: "Mountains",
+      url: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=200&h=200&fit=crop",
+    },
+    {
+      id: "nature-3",
+      name: "Ocean",
+      url: "https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=200&h=200&fit=crop",
+    },
+    {
+      id: "nature-4",
+      name: "Sunset",
+      url: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=200&h=200&fit=crop",
+    },
+    {
+      id: "nature-5",
+      name: "Flowers",
+      url: "https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=200&h=200&fit=crop",
+    },
+    {
+      id: "nature-6",
+      name: "Trees",
+      url: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=200&h=200&fit=crop",
+    },
   ],
-  "Abstract": [
-    { id: "abstract-1", name: "Geometric", url: "https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=200&h=200&fit=crop" },
-    { id: "abstract-2", name: "Colorful", url: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=200&h=200&fit=crop" },
-    { id: "abstract-3", name: "Pattern", url: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=200&h=200&fit=crop" },
-    { id: "abstract-4", name: "Modern", url: "https://images.unsplash.com/photo-1557683316-973673baf926?w=200&h=200&fit=crop" },
-    { id: "abstract-5", name: "Minimalist", url: "https://images.unsplash.com/photo-1557683316-973673baf926?w=200&h=200&fit=crop" },
-    { id: "abstract-6", name: "Artistic", url: "https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=200&h=200&fit=crop" }
+  Abstract: [
+    {
+      id: "abstract-1",
+      name: "Geometric",
+      url: "https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=200&h=200&fit=crop",
+    },
+    {
+      id: "abstract-2",
+      name: "Colorful",
+      url: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=200&h=200&fit=crop",
+    },
+    {
+      id: "abstract-3",
+      name: "Pattern",
+      url: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=200&h=200&fit=crop",
+    },
+    {
+      id: "abstract-4",
+      name: "Modern",
+      url: "https://images.unsplash.com/photo-1557683316-973673baf926?w=200&h=200&fit=crop",
+    },
+    {
+      id: "abstract-5",
+      name: "Minimalist",
+      url: "https://images.unsplash.com/photo-1557683316-973673baf926?w=200&h=200&fit=crop",
+    },
+    {
+      id: "abstract-6",
+      name: "Artistic",
+      url: "https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=200&h=200&fit=crop",
+    },
   ],
-  "Urban": [
-    { id: "urban-1", name: "City", url: "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=200&h=200&fit=crop" },
-    { id: "urban-2", name: "Street", url: "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=200&h=200&fit=crop" },
-    { id: "urban-3", name: "Architecture", url: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=200&h=200&fit=crop" },
-    { id: "urban-4", name: "Night", url: "https://images.unsplash.com/photo-1519501025264-65ba15a82390?w=200&h=200&fit=crop" },
-    { id: "urban-5", name: "Skyline", url: "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=200&h=200&fit=crop" },
-    { id: "urban-6", name: "Modern", url: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=200&h=200&fit=crop" }
+  Urban: [
+    {
+      id: "urban-1",
+      name: "City",
+      url: "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=200&h=200&fit=crop",
+    },
+    {
+      id: "urban-2",
+      name: "Street",
+      url: "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=200&h=200&fit=crop",
+    },
+    {
+      id: "urban-3",
+      name: "Architecture",
+      url: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=200&h=200&fit=crop",
+    },
+    {
+      id: "urban-4",
+      name: "Night",
+      url: "https://images.unsplash.com/photo-1519501025264-65ba15a82390?w=200&h=200&fit=crop",
+    },
+    {
+      id: "urban-5",
+      name: "Skyline",
+      url: "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=200&h=200&fit=crop",
+    },
+    {
+      id: "urban-6",
+      name: "Modern",
+      url: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=200&h=200&fit=crop",
+    },
   ],
-  "Space": [
-    { id: "space-1", name: "Galaxy", url: "https://images.unsplash.com/photo-1446776877081-d282a0f896e2?w=200&h=200&fit=crop" },
-    { id: "space-2", name: "Planets", url: "https://images.unsplash.com/photo-1446776877081-d282a0f896e2?w=200&h=200&fit=crop" },
-    { id: "space-3", name: "Stars", url: "https://images.unsplash.com/photo-1502134249126-9f3755a50d78?w=200&h=200&fit=crop" },
-    { id: "space-4", name: "Nebula", url: "https://images.unsplash.com/photo-1502134249126-9f3755a50d78?w=200&h=200&fit=crop" },
-    { id: "space-5", name: "Cosmic", url: "https://images.unsplash.com/photo-1446776877081-d282a0f896e2?w=200&h=200&fit=crop" },
-    { id: "space-6", name: "Universe", url: "https://images.unsplash.com/photo-1502134249126-9f3755a50d78?w=200&h=200&fit=crop" }
+  Space: [
+    {
+      id: "space-1",
+      name: "Galaxy",
+      url: "https://images.unsplash.com/photo-1446776877081-d282a0f896e2?w=200&h=200&fit=crop",
+    },
+    {
+      id: "space-2",
+      name: "Planets",
+      url: "https://images.unsplash.com/photo-1446776877081-d282a0f896e2?w=200&h=200&fit=crop",
+    },
+    {
+      id: "space-3",
+      name: "Stars",
+      url: "https://images.unsplash.com/photo-1502134249126-9f3755a50d78?w=200&h=200&fit=crop",
+    },
+    {
+      id: "space-4",
+      name: "Nebula",
+      url: "https://images.unsplash.com/photo-1502134249126-9f3755a50d78?w=200&h=200&fit=crop",
+    },
+    {
+      id: "space-5",
+      name: "Cosmic",
+      url: "https://images.unsplash.com/photo-1446776877081-d282a0f896e2?w=200&h=200&fit=crop",
+    },
+    {
+      id: "space-6",
+      name: "Universe",
+      url: "https://images.unsplash.com/photo-1502134249126-9f3755a50d78?w=200&h=200&fit=crop",
+    },
   ],
-  "Animals": [
-    { id: "animal-1", name: "Cats", url: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=200&h=200&fit=crop" },
-    { id: "animal-2", name: "Dogs", url: "https://images.unsplash.com/photo-1552053831-71594a27632d?w=200&h=200&fit=crop" },
-    { id: "animal-3", name: "Birds", url: "https://images.unsplash.com/photo-1444464666168-49d633b86797?w=200&h=200&fit=crop" },
-    { id: "animal-4", name: "Wildlife", url: "https://images.unsplash.com/photo-1564349683136-77e08dba1ef7?w=200&h=200&fit=crop" }
+  Animals: [
+    {
+      id: "animal-1",
+      name: "Cats",
+      url: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=200&h=200&fit=crop",
+    },
+    {
+      id: "animal-2",
+      name: "Dogs",
+      url: "https://images.unsplash.com/photo-1552053831-71594a27632d?w=200&h=200&fit=crop",
+    },
+    {
+      id: "animal-3",
+      name: "Birds",
+      url: "https://images.unsplash.com/photo-1444464666168-49d633b86797?w=200&h=200&fit=crop",
+    },
+    {
+      id: "animal-4",
+      name: "Wildlife",
+      url: "https://images.unsplash.com/photo-1564349683136-77e08dba1ef7?w=200&h=200&fit=crop",
+    },
   ],
-  "Food": [
-    { id: "food-1", name: "Coffee", url: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=200&h=200&fit=crop" },
-    { id: "food-2", name: "Pizza", url: "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=200&h=200&fit=crop" },
-    { id: "food-3", name: "Fruits", url: "https://images.unsplash.com/photo-1610832958506-aa56368176cf?w=200&h=200&fit=crop" },
-    { id: "food-4", name: "Desserts", url: "https://images.unsplash.com/photo-1551024506-0bccd828d307?w=200&h=200&fit=crop" }
-  ]
+  Food: [
+    {
+      id: "food-1",
+      name: "Coffee",
+      url: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=200&h=200&fit=crop",
+    },
+    {
+      id: "food-2",
+      name: "Pizza",
+      url: "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=200&h=200&fit=crop",
+    },
+    {
+      id: "food-3",
+      name: "Fruits",
+      url: "https://images.unsplash.com/photo-1610832958506-aa56368176cf?w=200&h=200&fit=crop",
+    },
+    {
+      id: "food-4",
+      name: "Desserts",
+      url: "https://images.unsplash.com/photo-1551024506-0bccd828d307?w=200&h=200&fit=crop",
+    },
+  ],
 };
 
 // Expanded sticker collection
 const stickers = [
   // Emoji Stickers
-  { id: "emoji-1", name: "Lightning", icon: "⚡", color: "#F59E0B", category: "Energy" },
-  { id: "emoji-2", name: "Star", icon: "⭐", color: "#8B5CF6", category: "Excellence" },
-  { id: "emoji-3", name: "Heart", icon: "❤️", color: "#EF4444", category: "Love" },
-  { id: "emoji-4", name: "Fire", icon: "🔥", color: "#F97316", category: "Hot" },
-  { id: "emoji-5", name: "Crown", icon: "👑", color: "#F59E0B", category: "Premium" },
-  { id: "emoji-6", name: "Diamond", icon: "💎", color: "#06B6D4", category: "Luxury" },
-  { id: "emoji-7", name: "Rocket", icon: "🚀", color: "#8B5CF6", category: "Success" },
-  { id: "emoji-8", name: "Sun", icon: "☀️", color: "#F59E0B", category: "Bright" },
-  { id: "emoji-9", name: "Moon", icon: "🌙", color: "#6366F1", category: "Night" },
-  { id: "emoji-10", name: "Rainbow", icon: "🌈", color: "#10B981", category: "Colorful" },
-  { id: "emoji-11", name: "Thumbs Up", icon: "👍", color: "#10B981", category: "Approval" },
-  { id: "emoji-12", name: "Peace", icon: "✌️", color: "#8B5CF6", category: "Peace" },
-  
+  {
+    id: "emoji-1",
+    name: "Lightning",
+    icon: "⚡",
+    color: "#F59E0B",
+    category: "Energy",
+  },
+  {
+    id: "emoji-2",
+    name: "Star",
+    icon: "⭐",
+    color: "#8B5CF6",
+    category: "Excellence",
+  },
+  {
+    id: "emoji-3",
+    name: "Heart",
+    icon: "❤️",
+    color: "#EF4444",
+    category: "Love",
+  },
+  {
+    id: "emoji-4",
+    name: "Fire",
+    icon: "🔥",
+    color: "#F97316",
+    category: "Hot",
+  },
+  {
+    id: "emoji-5",
+    name: "Crown",
+    icon: "👑",
+    color: "#F59E0B",
+    category: "Premium",
+  },
+  {
+    id: "emoji-6",
+    name: "Diamond",
+    icon: "💎",
+    color: "#06B6D4",
+    category: "Luxury",
+  },
+  {
+    id: "emoji-7",
+    name: "Rocket",
+    icon: "🚀",
+    color: "#8B5CF6",
+    category: "Success",
+  },
+  {
+    id: "emoji-8",
+    name: "Sun",
+    icon: "☀️",
+    color: "#F59E0B",
+    category: "Bright",
+  },
+  {
+    id: "emoji-9",
+    name: "Moon",
+    icon: "🌙",
+    color: "#6366F1",
+    category: "Night",
+  },
+  {
+    id: "emoji-10",
+    name: "Rainbow",
+    icon: "🌈",
+    color: "#10B981",
+    category: "Colorful",
+  },
+  {
+    id: "emoji-11",
+    name: "Thumbs Up",
+    icon: "👍",
+    color: "#10B981",
+    category: "Approval",
+  },
+  {
+    id: "emoji-12",
+    name: "Peace",
+    icon: "✌️",
+    color: "#8B5CF6",
+    category: "Peace",
+  },
+
   // Symbol Stickers
-  { id: "symbol-1", name: "Checkmark", icon: "✓", color: "#10B981", category: "Success" },
-  { id: "symbol-2", name: "X Mark", icon: "✗", color: "#EF4444", category: "Cancel" },
-  { id: "symbol-3", name: "Plus", icon: "+", color: "#8B5CF6", category: "Add" },
-  { id: "symbol-4", name: "Minus", icon: "-", color: "#6B7280", category: "Remove" },
-  { id: "symbol-5", name: "Arrow Up", icon: "↑", color: "#10B981", category: "Up" },
-  { id: "symbol-6", name: "Arrow Down", icon: "↓", color: "#EF4444", category: "Down" },
-  { id: "symbol-7", name: "Arrow Right", icon: "→", color: "#8B5CF6", category: "Forward" },
-  { id: "symbol-8", name: "Arrow Left", icon: "←", color: "#8B5CF6", category: "Back" },
-  
+  {
+    id: "symbol-1",
+    name: "Checkmark",
+    icon: "✓",
+    color: "#10B981",
+    category: "Success",
+  },
+  {
+    id: "symbol-2",
+    name: "X Mark",
+    icon: "✗",
+    color: "#EF4444",
+    category: "Cancel",
+  },
+  {
+    id: "symbol-3",
+    name: "Plus",
+    icon: "+",
+    color: "#8B5CF6",
+    category: "Add",
+  },
+  {
+    id: "symbol-4",
+    name: "Minus",
+    icon: "-",
+    color: "#6B7280",
+    category: "Remove",
+  },
+  {
+    id: "symbol-5",
+    name: "Arrow Up",
+    icon: "↑",
+    color: "#10B981",
+    category: "Up",
+  },
+  {
+    id: "symbol-6",
+    name: "Arrow Down",
+    icon: "↓",
+    color: "#EF4444",
+    category: "Down",
+  },
+  {
+    id: "symbol-7",
+    name: "Arrow Right",
+    icon: "→",
+    color: "#8B5CF6",
+    category: "Forward",
+  },
+  {
+    id: "symbol-8",
+    name: "Arrow Left",
+    icon: "←",
+    color: "#8B5CF6",
+    category: "Back",
+  },
+
   // Shape Stickers
-  { id: "shape-1", name: "Circle", icon: "●", color: "#8B5CF6", category: "Shape" },
-  { id: "shape-2", name: "Square", icon: "■", color: "#EF4444", category: "Shape" },
-  { id: "shape-3", name: "Triangle", icon: "▲", color: "#F59E0B", category: "Shape" },
-  { id: "shape-4", name: "Diamond", icon: "♦", color: "#06B6D4", category: "Shape" }
+  {
+    id: "shape-1",
+    name: "Circle",
+    icon: "●",
+    color: "#8B5CF6",
+    category: "Shape",
+  },
+  {
+    id: "shape-2",
+    name: "Square",
+    icon: "■",
+    color: "#EF4444",
+    category: "Shape",
+  },
+  {
+    id: "shape-3",
+    name: "Triangle",
+    icon: "▲",
+    color: "#F59E0B",
+    category: "Shape",
+  },
+  {
+    id: "shape-4",
+    name: "Diamond",
+    icon: "♦",
+    color: "#06B6D4",
+    category: "Shape",
+  },
 ];
 
 const Designer = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [fabricCanvas, setFabricCanvas] = useState<FabricCanvas | null>(null);
-  const [activeColor, setActiveColor] = useState("#8B5CF6");
+  const [activeColor, setActiveColor] = useState("#000000");
   const [showColorPicker, setShowColorPicker] = useState(false);
+  const [textFont, setTextFont] = useState("Arial");
+  const [textOutlineColor, setTextOutlineColor] = useState("#FFFFFF");
+  const [textOutlineWidth, setTextOutlineWidth] = useState(0);
+  const [showOutlineColorPicker, setShowOutlineColorPicker] = useState(false);
+  const [textBold, setTextBold] = useState(false);
+  const [textItalic, setTextItalic] = useState(false);
+  const [textUnderline, setTextUnderline] = useState(false);
+  const [textShape, setTextShape] = useState("normal");
+
+  // Text shape options with Fabric.js properties
+  const textShapes = [
+    {
+      id: "normal",
+      name: "NORMAL",
+      style: { fontWeight: "bold" },
+      fabricProps: {
+        angle: 0,
+        scaleX: 1,
+        scaleY: 1,
+        skewX: 0,
+        skewY: 0,
+        charSpacing: 0,
+      },
+    },
+    {
+      id: "curve",
+      name: "CURVE",
+      style: { transform: "rotate(-8deg)", fontWeight: "bold" },
+      fabricProps: {
+        angle: -5,
+        scaleX: 1,
+        scaleY: 1,
+        skewX: 0,
+        skewY: 0,
+        charSpacing: 0,
+      },
+    },
+    {
+      id: "arch",
+      name: "ARCH",
+      style: { transform: "scaleY(0.7) scaleX(1.1)", fontWeight: "bold" },
+      fabricProps: {
+        angle: 0,
+        scaleX: 1,
+        scaleY: 0.8,
+        skewX: 0,
+        skewY: 0,
+        charSpacing: 0,
+      },
+    },
+    {
+      id: "bridge",
+      name: "BRIDGE",
+      style: {
+        fontWeight: "900",
+        letterSpacing: "-2px",
+        transform: "scaleY(1.2)",
+      },
+      fabricProps: {
+        angle: 0,
+        scaleX: 1.2,
+        scaleY: 0.9,
+        skewX: 0,
+        skewY: 0,
+        charSpacing: -20,
+      },
+    },
+    {
+      id: "valley",
+      name: "VALLEY",
+      style: {
+        fontWeight: "bold",
+        transform: "scaleY(0.8)",
+        letterSpacing: "1px",
+      },
+      fabricProps: {
+        angle: 0,
+        scaleX: 1,
+        scaleY: 1.2,
+        skewX: 0,
+        skewY: 0,
+        charSpacing: 0,
+      },
+    },
+    {
+      id: "pinch",
+      name: "PINCH",
+      style: { fontWeight: "900", transform: "scaleX(0.85)" },
+      fabricProps: {
+        angle: 0,
+        scaleX: 0.8,
+        scaleY: 1,
+        skewX: 0,
+        skewY: 0,
+        charSpacing: -10,
+      },
+    },
+    {
+      id: "bulge",
+      name: "BULGE",
+      style: { fontWeight: "900", transform: "scaleX(1.15) scaleY(1.1)" },
+      fabricProps: {
+        angle: 0,
+        scaleX: 1.3,
+        scaleY: 1,
+        skewX: 0,
+        skewY: 0,
+        charSpacing: -10,
+      },
+    },
+    {
+      id: "perspective",
+      name: "PERSPECTIVE",
+      style: {
+        fontWeight: "bold",
+        transform: "perspective(200px) rotateY(-15deg)",
+        letterSpacing: "-1px",
+      },
+      fabricProps: {
+        angle: 0,
+        scaleX: 1,
+        scaleY: 0.9,
+        skewX: 5,
+        skewY: 0,
+        charSpacing: 0,
+      },
+    },
+    {
+      id: "pointed",
+      name: "POINTED",
+      style: {
+        fontStyle: "italic",
+        fontWeight: "bold",
+        transform: "skewX(-10deg)",
+      },
+      fabricProps: {
+        angle: 0,
+        scaleX: 1,
+        scaleY: 1,
+        skewX: 15,
+        skewY: 0,
+        charSpacing: 0,
+      },
+    },
+    {
+      id: "downward",
+      name: "DOWNWARD",
+      style: { transform: "rotate(-8deg)", fontWeight: "bold" },
+      fabricProps: {
+        angle: -10,
+        scaleX: 1,
+        scaleY: 1,
+        skewX: 0,
+        skewY: 0,
+        charSpacing: 0,
+      },
+    },
+    {
+      id: "upward",
+      name: "UPWARD",
+      style: { transform: "rotate(8deg)", fontWeight: "bold" },
+      fabricProps: {
+        angle: 10,
+        scaleX: 1,
+        scaleY: 1,
+        skewX: 0,
+        skewY: 0,
+        charSpacing: 0,
+      },
+    },
+    {
+      id: "cone",
+      name: "CONE",
+      style: {
+        fontWeight: "900",
+        letterSpacing: "4px",
+        transform: "scaleX(1.1)",
+      },
+      fabricProps: {
+        angle: 0,
+        scaleX: 1,
+        scaleY: 1,
+        skewX: 0,
+        skewY: 0,
+        charSpacing: 30,
+      },
+    },
+  ];
+
+  // Popular color palette - Top 10 colors
+  const popularColors = [
+    "#FFFFFF", // White
+    "#808080", // Gray
+    "#000000", // Black
+    "#4A4A4A", // Dark Gray
+    "#C0C0C0", // Silver
+    "#FF1493", // Hot Pink
+    "#FFB6C1", // Light Pink
+    "#FF69B4", // Pink
+    "#9370DB", // Purple
+    "#8B4513", // Brown
+  ];
   const [searchQuery, setSearchQuery] = useState("");
-  const [activeTab, setActiveTab] = useState("templates");
+  const [activeTab, setActiveTab] = useState("images");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedProduct, setSelectedProduct] = useState("tshirt");
   const [currentView, setCurrentView] = useState(0);
@@ -212,6 +983,28 @@ const Designer = () => {
   const navigate = useNavigate();
 
   const currentProduct = products[selectedProduct as keyof typeof products];
+
+  // Add keyboard shortcut for delete
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.key === "Delete" || e.key === "Backspace") && fabricCanvas) {
+        const activeObject = fabricCanvas.getActiveObject();
+        if (
+          activeObject &&
+          document.activeElement?.tagName !== "INPUT" &&
+          document.activeElement?.tagName !== "TEXTAREA"
+        ) {
+          e.preventDefault();
+          fabricCanvas.remove(activeObject);
+          fabricCanvas.requestRenderAll();
+          toast.success("Object deleted!");
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [fabricCanvas]);
 
   useEffect(() => {
     if (!canvasRef.current) return;
@@ -252,12 +1045,26 @@ const Designer = () => {
   const addText = (content = "Your Text Here") => {
     if (!fabricCanvas) return;
 
+    const selectedShape =
+      textShapes.find((s) => s.id === textShape) || textShapes[0];
+
     const text = new IText(content, {
       left: 200,
       top: 200,
       fill: activeColor,
       fontSize: 32,
-      fontFamily: "Arial",
+      fontFamily: textFont,
+      fontWeight: textBold ? "bold" : "normal",
+      fontStyle: textItalic ? "italic" : "normal",
+      underline: textUnderline,
+      stroke: textOutlineWidth > 0 ? textOutlineColor : undefined,
+      strokeWidth: textOutlineWidth,
+      angle: selectedShape.fabricProps.angle,
+      scaleX: selectedShape.fabricProps.scaleX,
+      scaleY: selectedShape.fabricProps.scaleY,
+      skewX: selectedShape.fabricProps.skewX,
+      skewY: selectedShape.fabricProps.skewY,
+      charSpacing: selectedShape.fabricProps.charSpacing,
     });
 
     fabricCanvas.add(text);
@@ -265,6 +1072,98 @@ const Designer = () => {
     fabricCanvas.renderAll();
     toast.success("Text added! Click to edit.");
   };
+
+  // Update selected text properties
+  const updateSelectedText = (
+    property: string,
+    value: string | number | boolean
+  ) => {
+    if (!fabricCanvas) return;
+    const activeObject = fabricCanvas.getActiveObject();
+
+    if (activeObject && activeObject.type === "i-text") {
+      switch (property) {
+        case "fontFamily":
+          activeObject.set("fontFamily", value);
+          break;
+        case "fontSize":
+          activeObject.set("fontSize", value);
+          break;
+        case "fill":
+          activeObject.set("fill", value);
+          break;
+        case "stroke":
+          activeObject.set("stroke", value);
+          break;
+        case "strokeWidth":
+          activeObject.set("strokeWidth", value);
+          break;
+        case "fontWeight":
+          activeObject.set("fontWeight", value);
+          break;
+        case "fontStyle":
+          activeObject.set("fontStyle", value);
+          break;
+        case "underline":
+          activeObject.set("underline", value);
+          break;
+      }
+      fabricCanvas.renderAll();
+    }
+  };
+
+  // Apply text shape to selected text
+  const applyTextShape = (shapeId: string) => {
+    if (!fabricCanvas) return;
+    const activeObject = fabricCanvas.getActiveObject();
+
+    if (activeObject && activeObject.type === "i-text") {
+      const selectedShape = textShapes.find((s) => s.id === shapeId);
+      if (selectedShape) {
+        activeObject.set({
+          angle: selectedShape.fabricProps.angle,
+          scaleX: selectedShape.fabricProps.scaleX,
+          scaleY: selectedShape.fabricProps.scaleY,
+          skewX: selectedShape.fabricProps.skewX,
+          skewY: selectedShape.fabricProps.skewY,
+          charSpacing: selectedShape.fabricProps.charSpacing,
+        });
+        fabricCanvas.renderAll();
+        toast.success(`Applied ${selectedShape.name} shape!`);
+      }
+    } else {
+      toast.error("Please select a text object first");
+    }
+  };
+
+  // Sync controls with selected text
+  useEffect(() => {
+    if (!fabricCanvas) return;
+
+    const handleSelection = () => {
+      const activeObject = fabricCanvas.getActiveObject();
+      if (activeObject && activeObject.type === "i-text") {
+        // Update controls to match selected text
+        // Using 'any' to bypass TypeScript errors with Fabric.js type definitions
+        const textObj = activeObject as any;
+        setTextFont(textObj.fontFamily || "Arial");
+        setActiveColor(textObj.fill || "#000000");
+        setTextOutlineColor(textObj.stroke || "#FFFFFF");
+        setTextOutlineWidth(textObj.strokeWidth || 0);
+        setTextBold(textObj.fontWeight === "bold");
+        setTextItalic(textObj.fontStyle === "italic");
+        setTextUnderline(textObj.underline || false);
+      }
+    };
+
+    fabricCanvas.on("selection:created", handleSelection);
+    fabricCanvas.on("selection:updated", handleSelection);
+
+    return () => {
+      fabricCanvas.off("selection:created", handleSelection);
+      fabricCanvas.off("selection:updated", handleSelection);
+    };
+  }, [fabricCanvas]);
 
   const addImage = (imageUrl: string) => {
     if (!fabricCanvas) return;
@@ -278,7 +1177,10 @@ const Designer = () => {
     });
   };
 
-  const addShape = (shape: "circle" | "rect", options: any = {}) => {
+  const addShape = (
+    shape: "circle" | "rect",
+    options: { radius?: number; width?: number; height?: number } = {}
+  ) => {
     if (!fabricCanvas) return;
 
     let shapeObj;
@@ -304,7 +1206,7 @@ const Designer = () => {
     toast.success("Shape added!");
   };
 
-  const addSticker = (sticker: typeof stickers[0]) => {
+  const addSticker = (sticker: (typeof stickers)[0]) => {
     if (!fabricCanvas) return;
 
     const text = new IText(sticker.icon, {
@@ -319,19 +1221,20 @@ const Designer = () => {
     toast.success(`${sticker.name} sticker added!`);
   };
 
-  const applyTemplate = (template: typeof templates[0]) => {
+  const applyTemplate = (template: (typeof templates)[0]) => {
     if (!fabricCanvas) return;
 
     // Clear existing elements (keep background)
     const objects = fabricCanvas.getObjects();
     objects.forEach((obj, index) => {
-      if (index !== 0) { // Keep background image (first object)
+      if (index !== 0) {
+        // Keep background image (first object)
         fabricCanvas.remove(obj);
       }
     });
 
     // Apply template elements
-    template.elements.forEach(element => {
+    template.elements.forEach((element) => {
       if (element.type === "text") {
         const text = new IText(element.content, {
           left: element.x,
@@ -381,7 +1284,7 @@ const Designer = () => {
     }
 
     setIsGenerating(true);
-    
+
     try {
       // Check if Gemini API key is available
       if (!GEMINI_API_KEY) {
@@ -409,7 +1312,7 @@ const Designer = () => {
 
       // Use the generated description to create a more relevant image
       const selectedImage = getFallbackImage(generatedDescription);
-      
+
       addImage(selectedImage);
       setIsGenerating(false);
       toast.success(`Gemini AI generated image for: "${aiPrompt}"`);
@@ -417,7 +1320,7 @@ const Designer = () => {
     } catch (error) {
       console.error("Gemini AI Error:", error);
       setIsGenerating(false);
-      
+
       // Fallback to smart image selection
       try {
         const fallbackImage = getFallbackImage(aiPrompt);
@@ -433,72 +1336,146 @@ const Designer = () => {
   // Fallback image selection function
   const getFallbackImage = (prompt: string) => {
     const lowerPrompt = prompt.toLowerCase();
-    
+
     // Nature-related prompts
-    if (lowerPrompt.includes('nature') || lowerPrompt.includes('forest') || lowerPrompt.includes('tree') || lowerPrompt.includes('green') || lowerPrompt.includes('leaf')) {
+    if (
+      lowerPrompt.includes("nature") ||
+      lowerPrompt.includes("forest") ||
+      lowerPrompt.includes("tree") ||
+      lowerPrompt.includes("green") ||
+      lowerPrompt.includes("leaf")
+    ) {
       return `https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=300&h=300&fit=crop&q=80`;
     }
-    
+
     // City/Urban prompts
-    if (lowerPrompt.includes('city') || lowerPrompt.includes('urban') || lowerPrompt.includes('street') || lowerPrompt.includes('building') || lowerPrompt.includes('skyline')) {
+    if (
+      lowerPrompt.includes("city") ||
+      lowerPrompt.includes("urban") ||
+      lowerPrompt.includes("street") ||
+      lowerPrompt.includes("building") ||
+      lowerPrompt.includes("skyline")
+    ) {
       return `https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=300&h=300&fit=crop&q=80`;
     }
-    
+
     // Space/Cosmic prompts
-    if (lowerPrompt.includes('space') || lowerPrompt.includes('galaxy') || lowerPrompt.includes('star') || lowerPrompt.includes('cosmic') || lowerPrompt.includes('universe')) {
+    if (
+      lowerPrompt.includes("space") ||
+      lowerPrompt.includes("galaxy") ||
+      lowerPrompt.includes("star") ||
+      lowerPrompt.includes("cosmic") ||
+      lowerPrompt.includes("universe")
+    ) {
       return `https://images.unsplash.com/photo-1446776877081-d282a0f896e2?w=300&h=300&fit=crop&q=80`;
     }
-    
+
     // Abstract/Art prompts
-    if (lowerPrompt.includes('abstract') || lowerPrompt.includes('art') || lowerPrompt.includes('modern') || lowerPrompt.includes('creative')) {
+    if (
+      lowerPrompt.includes("abstract") ||
+      lowerPrompt.includes("art") ||
+      lowerPrompt.includes("modern") ||
+      lowerPrompt.includes("creative")
+    ) {
       return `https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=300&h=300&fit=crop&q=80`;
     }
-    
+
     // Colorful/Vibrant prompts
-    if (lowerPrompt.includes('color') || lowerPrompt.includes('bright') || lowerPrompt.includes('vibrant') || lowerPrompt.includes('rainbow') || lowerPrompt.includes('colorful')) {
+    if (
+      lowerPrompt.includes("color") ||
+      lowerPrompt.includes("bright") ||
+      lowerPrompt.includes("vibrant") ||
+      lowerPrompt.includes("rainbow") ||
+      lowerPrompt.includes("colorful")
+    ) {
       return `https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=300&h=300&fit=crop&q=80`;
     }
-    
+
     // Pattern/Design prompts
-    if (lowerPrompt.includes('pattern') || lowerPrompt.includes('design') || lowerPrompt.includes('texture') || lowerPrompt.includes('geometric')) {
+    if (
+      lowerPrompt.includes("pattern") ||
+      lowerPrompt.includes("design") ||
+      lowerPrompt.includes("texture") ||
+      lowerPrompt.includes("geometric")
+    ) {
       return `https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=300&h=300&fit=crop&q=80`;
     }
-    
+
     // Floral/Flower prompts
-    if (lowerPrompt.includes('flower') || lowerPrompt.includes('floral') || lowerPrompt.includes('plant') || lowerPrompt.includes('garden') || lowerPrompt.includes('bloom')) {
+    if (
+      lowerPrompt.includes("flower") ||
+      lowerPrompt.includes("floral") ||
+      lowerPrompt.includes("plant") ||
+      lowerPrompt.includes("garden") ||
+      lowerPrompt.includes("bloom")
+    ) {
       return `https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=300&h=300&fit=crop&q=80`;
     }
-    
+
     // Animal prompts
-    if (lowerPrompt.includes('animal') || lowerPrompt.includes('cat') || lowerPrompt.includes('dog') || lowerPrompt.includes('pet') || lowerPrompt.includes('wildlife')) {
+    if (
+      lowerPrompt.includes("animal") ||
+      lowerPrompt.includes("cat") ||
+      lowerPrompt.includes("dog") ||
+      lowerPrompt.includes("pet") ||
+      lowerPrompt.includes("wildlife")
+    ) {
       return `https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=300&h=300&fit=crop&q=80`;
     }
-    
+
     // Food prompts
-    if (lowerPrompt.includes('food') || lowerPrompt.includes('coffee') || lowerPrompt.includes('pizza') || lowerPrompt.includes('dessert') || lowerPrompt.includes('meal')) {
+    if (
+      lowerPrompt.includes("food") ||
+      lowerPrompt.includes("coffee") ||
+      lowerPrompt.includes("pizza") ||
+      lowerPrompt.includes("dessert") ||
+      lowerPrompt.includes("meal")
+    ) {
       return `https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=300&h=300&fit=crop&q=80`;
     }
-    
+
     // Ocean/Water prompts
-    if (lowerPrompt.includes('ocean') || lowerPrompt.includes('water') || lowerPrompt.includes('sea') || lowerPrompt.includes('wave') || lowerPrompt.includes('beach')) {
+    if (
+      lowerPrompt.includes("ocean") ||
+      lowerPrompt.includes("water") ||
+      lowerPrompt.includes("sea") ||
+      lowerPrompt.includes("wave") ||
+      lowerPrompt.includes("beach")
+    ) {
       return `https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=300&h=300&fit=crop&q=80`;
     }
-    
+
     // Mountain/Landscape prompts
-    if (lowerPrompt.includes('mountain') || lowerPrompt.includes('landscape') || lowerPrompt.includes('hill') || lowerPrompt.includes('peak')) {
+    if (
+      lowerPrompt.includes("mountain") ||
+      lowerPrompt.includes("landscape") ||
+      lowerPrompt.includes("hill") ||
+      lowerPrompt.includes("peak")
+    ) {
       return `https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&h=300&fit=crop&q=80`;
     }
-    
+
     // Sunset/Sunrise prompts
-    if (lowerPrompt.includes('sunset') || lowerPrompt.includes('sunrise') || lowerPrompt.includes('dawn') || lowerPrompt.includes('dusk')) {
+    if (
+      lowerPrompt.includes("sunset") ||
+      lowerPrompt.includes("sunrise") ||
+      lowerPrompt.includes("dawn") ||
+      lowerPrompt.includes("dusk")
+    ) {
       return `https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&h=300&fit=crop&q=80`;
     }
-    
+
     // Technology/Digital prompts
-    if (lowerPrompt.includes('tech') || lowerPrompt.includes('digital') || lowerPrompt.includes('computer') || lowerPrompt.includes('code') || lowerPrompt.includes('ai')) {
+    if (
+      lowerPrompt.includes("tech") ||
+      lowerPrompt.includes("digital") ||
+      lowerPrompt.includes("computer") ||
+      lowerPrompt.includes("code") ||
+      lowerPrompt.includes("ai")
+    ) {
       return `https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=300&h=300&fit=crop&q=80`;
     }
-    
+
     // Default fallback for unrecognized prompts
     return `https://images.unsplash.com/photo-1557683316-973673baf926?w=300&h=300&fit=crop&q=80`;
   };
@@ -531,7 +1508,8 @@ const Designer = () => {
     if (!fabricCanvas) return;
     const objects = fabricCanvas.getObjects();
     objects.forEach((obj, index) => {
-      if (index !== 0) { // Keep background image (first object)
+      if (index !== 0) {
+        // Keep background image (first object)
         fabricCanvas.remove(obj);
       }
     });
@@ -541,9 +1519,15 @@ const Designer = () => {
 
   const downloadDesign = () => {
     if (!fabricCanvas) return;
-    const dataURL = fabricCanvas.toDataURL({ format: "png", quality: 1, multiplier: 2 });
+    const dataURL = fabricCanvas.toDataURL({
+      format: "png",
+      quality: 1,
+      multiplier: 2,
+    });
     const link = document.createElement("a");
-    link.download = `${currentProduct.name.toLowerCase().replace(/\s+/g, '-')}-design.png`;
+    link.download = `${currentProduct.name
+      .toLowerCase()
+      .replace(/\s+/g, "-")}-design.png`;
     link.href = dataURL;
     link.click();
     toast.success("Design downloaded!");
@@ -561,21 +1545,28 @@ const Designer = () => {
   };
 
   // Filter templates based on search and category
-  const filteredTemplates = templates.filter(template => {
-    const matchesSearch = template.name.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = selectedCategory === "All" || template.category === selectedCategory;
+  const filteredTemplates = templates.filter((template) => {
+    const matchesSearch = template.name
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
+    const matchesCategory =
+      selectedCategory === "All" || template.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
 
   // Filter images based on search
-  const filteredImages = Object.entries(imageCategories).flatMap(([category, images]) => 
-    images.filter(img => img.name.toLowerCase().includes(searchQuery.toLowerCase()))
+  const filteredImages = Object.entries(imageCategories).flatMap(
+    ([category, images]) =>
+      images.filter((img) =>
+        img.name.toLowerCase().includes(searchQuery.toLowerCase())
+      )
   );
 
   // Filter stickers based on search
-  const filteredStickers = stickers.filter(sticker => 
-    sticker.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    sticker.category.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredStickers = stickers.filter(
+    (sticker) =>
+      sticker.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      sticker.category.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
@@ -596,15 +1587,26 @@ const Designer = () => {
               Design Studio
             </h1>
             <div className="flex gap-2">
-              <Button onClick={saveDesign} variant="outline" size="sm" className="gap-2">
+              <Button
+                onClick={saveDesign}
+                variant="outline"
+                size="sm"
+                className="gap-2"
+              >
                 <Save className="h-4 w-4" />
                 Save
               </Button>
-              <Button onClick={downloadDesign} className="bg-gradient-primary text-primary-foreground gap-2">
+              <Button
+                onClick={downloadDesign}
+                className="bg-gradient-primary text-primary-foreground gap-2"
+              >
                 <Download className="h-4 w-4" />
                 Export
               </Button>
-              <Button onClick={proceedToCheckout} className="bg-green-600 text-white gap-2">
+              <Button
+                onClick={proceedToCheckout}
+                className="bg-green-600 text-white gap-2"
+              >
                 <ShoppingCart className="h-4 w-4" />
                 Checkout
               </Button>
@@ -622,63 +1624,17 @@ const Designer = () => {
               <h3 className="font-semibold">Design Elements</h3>
             </div>
 
-            {/* Search Bar */}
-            <div className="relative mb-4">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Search elements..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10"
-              />
-            </div>
-
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+            <Tabs
+              value={activeTab}
+              onValueChange={setActiveTab}
+              className="w-full"
+            >
               <TabsList className="grid w-full grid-cols-4">
-                <TabsTrigger value="templates">Templates</TabsTrigger>
                 <TabsTrigger value="images">Images</TabsTrigger>
-                <TabsTrigger value="stickers">Stickers</TabsTrigger>
+                <TabsTrigger value="text">Text</TabsTrigger>
+                <TabsTrigger value="upload">Upload</TabsTrigger>
                 <TabsTrigger value="ai">AI</TabsTrigger>
               </TabsList>
-
-              {/* Templates Tab */}
-              <TabsContent value="templates" className="space-y-4 mt-4">
-                {/* Category Filter */}
-                <div className="flex gap-2 flex-wrap">
-                  {["All", "Text", "Graphics", "Logo", "Pattern"].map((category) => (
-                    <Button
-                      key={category}
-                      variant={selectedCategory === category ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => setSelectedCategory(category)}
-                    >
-                      {category}
-                    </Button>
-                  ))}
-                </div>
-
-                <div className="grid grid-cols-2 gap-3">
-                  {filteredTemplates.map((template) => (
-                    <div
-                      key={template.id}
-                      className="relative group cursor-pointer rounded-lg overflow-hidden border-2 border-border hover:border-primary transition-all"
-                      onClick={() => applyTemplate(template)}
-                    >
-                      <img
-                        src={template.thumbnail}
-                        alt={template.name}
-                        className="w-full h-20 object-cover"
-                      />
-                      {template.premium && (
-                        <Crown className="absolute top-1 right-1 h-3 w-3 text-yellow-500" />
-                      )}
-                      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-2">
-                        <p className="text-white text-xs font-medium">{template.name}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </TabsContent>
 
               {/* Images Tab */}
               <TabsContent value="images" className="space-y-4 mt-4">
@@ -709,22 +1665,451 @@ const Designer = () => {
                 ))}
               </TabsContent>
 
-              {/* Stickers Tab */}
-              <TabsContent value="stickers" className="space-y-4 mt-4">
-                <div className="grid grid-cols-3 gap-2">
-                  {filteredStickers.map((sticker) => (
-                    <div
-                      key={sticker.id}
-                      className="p-3 rounded-lg border border-border hover:border-primary cursor-pointer transition-all hover:shadow-md"
-                      onClick={() => addSticker(sticker)}
+              {/* Text Tab */}
+              <TabsContent value="text" className="space-y-4 mt-4">
+                <div className="space-y-4">
+                  <div>
+                    <label className="text-sm font-medium mb-2 block">
+                      Add Custom Text
+                    </label>
+                    <Button
+                      onClick={() => addText()}
+                      className="w-full bg-gradient-primary text-primary-foreground gap-2"
                     >
-                      <div className="text-center">
-                        <div className="text-2xl mb-1">{sticker.icon}</div>
-                        <p className="text-xs font-medium">{sticker.name}</p>
-                        <p className="text-xs text-muted-foreground">{sticker.category}</p>
+                      <Type className="h-4 w-4" />
+                      Add Text to Canvas
+                    </Button>
+                  </div>
+
+                  {/* Text Customization Section */}
+                  <div className="pt-4 border-t space-y-4">
+                    {/* Font Family */}
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">Font Family</label>
+                      <select
+                        value={textFont}
+                        onChange={(e) => {
+                          setTextFont(e.target.value);
+                          updateSelectedText("fontFamily", e.target.value);
+                        }}
+                        className="w-full p-2 border border-border rounded-md bg-background text-sm"
+                      >
+                        <option value="Arial" style={{ fontFamily: "Arial" }}>
+                          Arial
+                        </option>
+                        <option
+                          value="Helvetica"
+                          style={{ fontFamily: "Helvetica" }}
+                        >
+                          Helvetica
+                        </option>
+                        <option
+                          value="Times New Roman"
+                          style={{ fontFamily: "Times New Roman" }}
+                        >
+                          Times New Roman
+                        </option>
+                        <option
+                          value="Georgia"
+                          style={{ fontFamily: "Georgia" }}
+                        >
+                          Georgia
+                        </option>
+                        <option
+                          value="Courier New"
+                          style={{ fontFamily: "Courier New" }}
+                        >
+                          Courier New
+                        </option>
+                        <option
+                          value="Verdana"
+                          style={{ fontFamily: "Verdana" }}
+                        >
+                          Verdana
+                        </option>
+                        <option value="Impact" style={{ fontFamily: "Impact" }}>
+                          Impact
+                        </option>
+                        <option
+                          value="Comic Sans MS"
+                          style={{ fontFamily: "Comic Sans MS" }}
+                        >
+                          Comic Sans MS
+                        </option>
+                        <option
+                          value="Trebuchet MS"
+                          style={{ fontFamily: "Trebuchet MS" }}
+                        >
+                          Trebuchet MS
+                        </option>
+                        <option
+                          value="Palatino"
+                          style={{ fontFamily: "Palatino" }}
+                        >
+                          Palatino
+                        </option>
+                      </select>
+                    </div>
+
+                    {/* Text Shape */}
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">
+                        Choose Text Shape
+                      </label>
+                      <div className="grid grid-cols-3 gap-2 max-h-64 overflow-y-auto">
+                        {textShapes.map((shape) => (
+                          <button
+                            key={shape.id}
+                            onClick={() => {
+                              setTextShape(shape.id);
+                              applyTextShape(shape.id);
+                            }}
+                            className={`p-3 rounded-md border-2 transition-all flex items-center justify-center ${
+                              textShape === shape.id
+                                ? "border-primary ring-2 ring-primary ring-offset-2 bg-primary/5"
+                                : "border-gray-300 hover:border-primary/50"
+                            }`}
+                            title={shape.name}
+                          >
+                            {/* SVG-based previews for curved shapes */}
+                            {shape.id === "curve" && (
+                              <svg
+                                width="60"
+                                height="30"
+                                viewBox="0 0 60 30"
+                                className="w-full"
+                              >
+                                <defs>
+                                  <path
+                                    id="curve-path"
+                                    d="M 5,25 Q 30,5 55,25"
+                                    fill="none"
+                                  />
+                                </defs>
+                                <text className="text-[8px] font-bold fill-current">
+                                  <textPath
+                                    href="#curve-path"
+                                    startOffset="50%"
+                                    textAnchor="middle"
+                                  >
+                                    {shape.name}
+                                  </textPath>
+                                </text>
+                              </svg>
+                            )}
+                            {shape.id === "arch" && (
+                              <svg
+                                width="60"
+                                height="30"
+                                viewBox="0 0 60 30"
+                                className="w-full"
+                              >
+                                <defs>
+                                  <path
+                                    id="arch-path"
+                                    d="M 5,25 Q 30,10 55,25"
+                                    fill="none"
+                                  />
+                                </defs>
+                                <text className="text-[8px] font-bold fill-current">
+                                  <textPath
+                                    href="#arch-path"
+                                    startOffset="50%"
+                                    textAnchor="middle"
+                                  >
+                                    {shape.name}
+                                  </textPath>
+                                </text>
+                              </svg>
+                            )}
+                            {shape.id === "upward" && (
+                              <svg
+                                width="60"
+                                height="30"
+                                viewBox="0 0 60 30"
+                                className="w-full"
+                              >
+                                <text
+                                  x="30"
+                                  y="20"
+                                  className="text-[10px] font-bold fill-current"
+                                  textAnchor="middle"
+                                  transform="rotate(-8 30 20)"
+                                >
+                                  {shape.name}
+                                </text>
+                              </svg>
+                            )}
+                            {shape.id === "downward" && (
+                              <svg
+                                width="60"
+                                height="30"
+                                viewBox="0 0 60 30"
+                                className="w-full"
+                              >
+                                <text
+                                  x="30"
+                                  y="15"
+                                  className="text-[10px] font-bold fill-current"
+                                  textAnchor="middle"
+                                  transform="rotate(8 30 15)"
+                                >
+                                  {shape.name}
+                                </text>
+                              </svg>
+                            )}
+                            {shape.id === "bridge" && (
+                              <svg
+                                width="60"
+                                height="30"
+                                viewBox="0 0 60 30"
+                                className="w-full"
+                              >
+                                <defs>
+                                  <path
+                                    id="bridge-path"
+                                    d="M 5,5 Q 30,25 55,5"
+                                    fill="none"
+                                  />
+                                </defs>
+                                <text className="text-[7px] font-black fill-current tracking-tighter">
+                                  <textPath
+                                    href="#bridge-path"
+                                    startOffset="50%"
+                                    textAnchor="middle"
+                                  >
+                                    {shape.name}
+                                  </textPath>
+                                </text>
+                              </svg>
+                            )}
+                            {shape.id === "valley" && (
+                              <svg
+                                width="60"
+                                height="30"
+                                viewBox="0 0 60 30"
+                                className="w-full"
+                              >
+                                <defs>
+                                  <path
+                                    id="valley-path"
+                                    d="M 5,10 Q 30,25 55,10"
+                                    fill="none"
+                                  />
+                                </defs>
+                                <text className="text-[8px] font-bold fill-current">
+                                  <textPath
+                                    href="#valley-path"
+                                    startOffset="50%"
+                                    textAnchor="middle"
+                                  >
+                                    {shape.name}
+                                  </textPath>
+                                </text>
+                              </svg>
+                            )}
+                            {shape.id === "perspective" && (
+                              <svg
+                                width="60"
+                                height="30"
+                                viewBox="0 0 60 30"
+                                className="w-full"
+                              >
+                                <text
+                                  x="30"
+                                  y="18"
+                                  className="text-[8px] font-bold fill-current tracking-tight"
+                                  textAnchor="middle"
+                                  transform="matrix(1,0,-0.2,1,0,0)"
+                                >
+                                  {shape.name}
+                                </text>
+                              </svg>
+                            )}
+                            {shape.id === "cone" && (
+                              <svg
+                                width="60"
+                                height="30"
+                                viewBox="0 0 60 30"
+                                className="w-full"
+                              >
+                                <text
+                                  x="30"
+                                  y="18"
+                                  className="text-[9px] font-black fill-current tracking-widest"
+                                  textAnchor="middle"
+                                >
+                                  {shape.name}
+                                </text>
+                              </svg>
+                            )}
+                            {/* CSS-based previews for other shapes */}
+                            {![
+                              "curve",
+                              "arch",
+                              "upward",
+                              "downward",
+                              "bridge",
+                              "valley",
+                              "perspective",
+                              "cone",
+                            ].includes(shape.id) && (
+                              <span
+                                className="text-sm font-bold block"
+                                style={shape.style}
+                              >
+                                {shape.name}
+                              </span>
+                            )}
+                          </button>
+                        ))}
                       </div>
                     </div>
-                  ))}
+
+                    {/* Text Color */}
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">
+                        Select Color
+                      </label>
+                      <div className="grid grid-cols-5 gap-2">
+                        {popularColors.map((color) => (
+                          <button
+                            key={color}
+                            onClick={() => {
+                              setActiveColor(color);
+                              updateSelectedText("fill", color);
+                            }}
+                            className={`w-full h-10 rounded-md border-2 transition-all ${
+                              activeColor === color
+                                ? "border-primary ring-2 ring-primary ring-offset-2"
+                                : "border-gray-300 hover:border-primary/50"
+                            }`}
+                            style={{ backgroundColor: color }}
+                            title={color}
+                          />
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Outline Color */}
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">
+                        Outline Color
+                      </label>
+                      <div className="grid grid-cols-5 gap-2">
+                        {/* No Outline Option */}
+                        <button
+                          onClick={() => {
+                            setTextOutlineWidth(0);
+                            updateSelectedText("strokeWidth", 0);
+                          }}
+                          className={`w-full h-10 rounded-md border-2 transition-all flex items-center justify-center ${
+                            textOutlineWidth === 0
+                              ? "border-primary ring-2 ring-primary ring-offset-2"
+                              : "border-gray-300 hover:border-primary/50"
+                          }`}
+                          title="No Outline"
+                        >
+                          <span className="text-xs font-medium">None</span>
+                        </button>
+
+                        {/* Color Options */}
+                        {popularColors.slice(0, 9).map((color) => (
+                          <button
+                            key={color}
+                            onClick={() => {
+                              setTextOutlineColor(color);
+                              setTextOutlineWidth(2);
+                              updateSelectedText("strokeWidth", 2);
+                              updateSelectedText("stroke", color);
+                            }}
+                            className={`w-full h-10 rounded-md border-2 transition-all ${
+                              textOutlineWidth > 0 && textOutlineColor === color
+                                ? "border-primary ring-2 ring-primary ring-offset-2"
+                                : "border-gray-300 hover:border-primary/50"
+                            }`}
+                            style={{ backgroundColor: color }}
+                            title={`Outline: ${color}`}
+                          />
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Text Style Buttons */}
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">Text Style</label>
+                      <div className="grid grid-cols-3 gap-2">
+                        <Button
+                          variant={textBold ? "default" : "outline"}
+                          size="sm"
+                          onClick={() => {
+                            const newBold = !textBold;
+                            setTextBold(newBold);
+                            updateSelectedText(
+                              "fontWeight",
+                              newBold ? "bold" : "normal"
+                            );
+                          }}
+                          className="font-bold"
+                        >
+                          B
+                        </Button>
+                        <Button
+                          variant={textItalic ? "default" : "outline"}
+                          size="sm"
+                          onClick={() => {
+                            const newItalic = !textItalic;
+                            setTextItalic(newItalic);
+                            updateSelectedText(
+                              "fontStyle",
+                              newItalic ? "italic" : "normal"
+                            );
+                          }}
+                          className="italic"
+                        >
+                          I
+                        </Button>
+                        <Button
+                          variant={textUnderline ? "default" : "outline"}
+                          size="sm"
+                          onClick={() => {
+                            const newUnderline = !textUnderline;
+                            setTextUnderline(newUnderline);
+                            updateSelectedText("underline", newUnderline);
+                          }}
+                          className="underline"
+                        >
+                          U
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </TabsContent>
+
+              {/* Upload Tab */}
+              <TabsContent value="upload" className="space-y-4 mt-4">
+                <div className="space-y-4">
+                  <div
+                    className="text-center p-6 border-2 border-dashed border-border rounded-lg hover:border-primary transition-all cursor-pointer"
+                    onClick={() => fileInputRef.current?.click()}
+                  >
+                    <Upload className="h-12 w-12 mx-auto mb-3 text-muted-foreground" />
+                    <h4 className="font-medium mb-1">Upload Your Image</h4>
+                    <p className="text-sm text-muted-foreground mb-3">
+                      Click to browse or drag and drop
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      Supports: JPG, PNG, GIF (Max 10MB)
+                    </p>
+                  </div>
+
+                  <div className="pt-4 border-t">
+                    <h4 className="font-medium text-sm mb-3">Recent Uploads</h4>
+                    <div className="text-center text-sm text-muted-foreground py-8">
+                      No recent uploads
+                    </div>
+                  </div>
                 </div>
               </TabsContent>
 
@@ -737,28 +2122,47 @@ const Designer = () => {
                       {GEMINI_API_KEY ? (
                         <>
                           <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                          <span className="text-sm font-medium text-green-700">Gemini AI Connected</span>
+                          <span className="text-sm font-medium text-green-700">
+                            Gemini AI Connected
+                          </span>
                         </>
                       ) : (
                         <>
                           <AlertCircle className="h-4 w-4 text-amber-500" />
-                          <span className="text-sm font-medium text-amber-700">Gemini AI Not Configured</span>
+                          <span className="text-sm font-medium text-amber-700">
+                            Gemini AI Not Configured
+                          </span>
                         </>
                       )}
                     </div>
                     {!GEMINI_API_KEY && (
                       <div className="text-xs text-muted-foreground">
-                        <p>To use Gemini AI, add your API key to the environment variables:</p>
+                        <p>
+                          To use Gemini AI, add your API key to the environment
+                          variables:
+                        </p>
                         <code className="block mt-1 p-1 bg-muted rounded text-xs">
                           VITE_GEMINI_API_KEY=your_api_key_here
                         </code>
-                        <p className="mt-1">Get your API key from: <a href="https://makersuite.google.com/app/apikey" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Google AI Studio</a></p>
+                        <p className="mt-1">
+                          Get your API key from:{" "}
+                          <a
+                            href="https://makersuite.google.com/app/apikey"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-primary hover:underline"
+                          >
+                            Google AI Studio
+                          </a>
+                        </p>
                       </div>
                     )}
                   </div>
 
                   <div>
-                    <label className="text-sm font-medium mb-2 block">AI Image Generation</label>
+                    <label className="text-sm font-medium mb-2 block">
+                      AI Image Generation
+                    </label>
                     <Input
                       placeholder="Describe the image you want to generate..."
                       value={aiPrompt}
@@ -773,21 +2177,28 @@ const Designer = () => {
                     {isGenerating ? (
                       <>
                         <RefreshCw className="h-4 w-4 animate-spin" />
-                        {GEMINI_API_KEY ? "Gemini AI Generating..." : "Generating..."}
+                        {GEMINI_API_KEY
+                          ? "Gemini AI Generating..."
+                          : "Generating..."}
                       </>
                     ) : (
                       <>
                         <Wand2 className="h-4 w-4" />
-                        {GEMINI_API_KEY ? "Generate with Gemini AI" : "Generate Image"}
+                        {GEMINI_API_KEY
+                          ? "Generate with Gemini AI"
+                          : "Generate Image"}
                       </>
                     )}
                   </Button>
-                  
+
                   <div className="pt-4 border-t">
-                    <h4 className="font-medium text-sm mb-2">AI Sticker Generation</h4>
+                    <h4 className="font-medium text-sm mb-2">
+                      AI Sticker Generation
+                    </h4>
                     <Button
                       onClick={() => {
-                        const randomSticker = stickers[Math.floor(Math.random() * stickers.length)];
+                        const randomSticker =
+                          stickers[Math.floor(Math.random() * stickers.length)];
                         addSticker(randomSticker);
                         toast.success("AI generated sticker!");
                       }}
@@ -801,74 +2212,6 @@ const Designer = () => {
                 </div>
               </TabsContent>
             </Tabs>
-
-            {/* Quick Tools */}
-            <div className="mt-6 pt-6 border-t border-border space-y-2">
-              <Button
-                onClick={() => addText()}
-                variant="outline"
-                className="w-full justify-start gap-2"
-              >
-                <Type className="h-4 w-4" />
-                Add Text
-              </Button>
-              
-              <div className="space-y-2">
-                <label className="text-sm font-medium flex items-center gap-2">
-                  <PaletteIcon className="h-4 w-4" />
-                  Color
-                </label>
-                <Button
-                  onClick={() => setShowColorPicker(!showColorPicker)}
-                  variant="outline"
-                  className="w-full justify-start gap-2"
-                >
-                  <div
-                    className="w-6 h-6 rounded border-2 border-border"
-                    style={{ backgroundColor: activeColor }}
-                  />
-                  {activeColor}
-                </Button>
-                {showColorPicker && (
-                  <div className="mt-2">
-                    <HexColorPicker color={activeColor} onChange={setActiveColor} />
-                  </div>
-                )}
-              </div>
-
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/*"
-                onChange={handleImageUpload}
-                className="hidden"
-              />
-              <Button
-                onClick={() => fileInputRef.current?.click()}
-                variant="outline"
-                className="w-full justify-start gap-2"
-              >
-                <Upload className="h-4 w-4" />
-                Upload Image
-              </Button>
-
-              <Button
-                onClick={deleteSelected}
-                variant="outline"
-                className="w-full justify-start gap-2 text-destructive hover:text-destructive"
-              >
-                <Trash2 className="h-4 w-4" />
-                Delete Selected
-              </Button>
-              <Button
-                onClick={clearCanvas}
-                variant="outline"
-                className="w-full justify-start gap-2"
-              >
-                <Trash2 className="h-4 w-4" />
-                Clear Design
-              </Button>
-            </div>
           </Card>
 
           {/* Center - Product Canvas */}
@@ -882,14 +2225,16 @@ const Designer = () => {
                     variant="outline"
                     size="sm"
                     onClick={() => setIsRotating(!isRotating)}
-                    className={isRotating ? "bg-primary text-primary-foreground" : ""}
+                    className={
+                      isRotating ? "bg-primary text-primary-foreground" : ""
+                    }
                   >
                     <RotateCcw className="h-4 w-4 mr-2" />
                     {isRotating ? "Stop" : "Auto Rotate"}
                   </Button>
                 </div>
               </div>
-              
+
               <div className="grid grid-cols-4 gap-2 mb-4">
                 {Object.entries(products).map(([key, product]) => (
                   <button
@@ -897,8 +2242,8 @@ const Designer = () => {
                     onClick={() => setSelectedProduct(key)}
                     className={`p-2 rounded-lg border-2 transition-all ${
                       selectedProduct === key
-                        ? 'border-primary bg-primary/10'
-                        : 'border-border hover:border-primary/50'
+                        ? "border-primary bg-primary/10"
+                        : "border-border hover:border-primary/50"
                     }`}
                   >
                     <img
@@ -919,8 +2264,8 @@ const Designer = () => {
                     onClick={() => setCurrentView(index)}
                     className={`relative w-16 h-16 rounded-lg overflow-hidden border-2 transition-all ${
                       currentView === index
-                        ? 'border-primary shadow-lg scale-105'
-                        : 'border-border hover:border-primary/50'
+                        ? "border-primary shadow-lg scale-105"
+                        : "border-border hover:border-primary/50"
                     }`}
                   >
                     <img
@@ -950,7 +2295,8 @@ const Designer = () => {
             </Card>
 
             <div className="text-center text-sm text-muted-foreground">
-              Click and drag objects to move • Use corners to resize • Double-click text to edit
+              Click and drag objects to move • Use corners to resize •
+              Double-click text to edit
             </div>
           </div>
 
@@ -971,20 +2317,28 @@ const Designer = () => {
                   {currentProduct.description}
                 </p>
                 <div className="flex items-center gap-2">
-                  <p className="text-lg font-bold text-primary">${currentProduct.price}</p>
-                  <Badge variant="secondary" className="bg-green-100 text-green-800">
+                  <p className="text-lg font-bold text-primary">
+                    ${currentProduct.price}
+                  </p>
+                  <Badge
+                    variant="secondary"
+                    className="bg-green-100 text-green-800"
+                  >
                     <Star className="h-3 w-3 mr-1" />
                     Premium
                   </Badge>
                 </div>
               </div>
-              
+
               <div className="space-y-2">
                 <Button className="w-full bg-gradient-primary text-primary-foreground">
                   <Heart className="h-4 w-4 mr-2" />
                   Add to Favorites
                 </Button>
-                <Button onClick={proceedToCheckout} className="w-full bg-green-600 text-white">
+                <Button
+                  onClick={proceedToCheckout}
+                  className="w-full bg-green-600 text-white"
+                >
                   <ShoppingCart className="h-4 w-4 mr-2" />
                   Add to Cart - ${currentProduct.price}
                 </Button>
@@ -1010,20 +2364,22 @@ const Designer = () => {
               <div className="flex-1">
                 <h4 className="font-medium">{currentProduct.name}</h4>
                 <p className="text-sm text-muted-foreground">Custom Design</p>
-                <p className="text-lg font-bold text-primary">${currentProduct.price}</p>
+                <p className="text-lg font-bold text-primary">
+                  ${currentProduct.price}
+                </p>
               </div>
             </div>
-            
+
             <div className="space-y-2">
               <label className="text-sm font-medium">Email</label>
               <Input placeholder="your@email.com" />
             </div>
-            
+
             <div className="space-y-2">
               <label className="text-sm font-medium">Shipping Address</label>
               <Input placeholder="Your address" />
             </div>
-            
+
             <div className="space-y-2">
               <label className="text-sm font-medium">Payment Method</label>
               <div className="flex gap-2">
@@ -1036,11 +2392,13 @@ const Designer = () => {
                 </Button>
               </div>
             </div>
-            
+
             <div className="pt-4 border-t">
               <div className="flex justify-between items-center mb-4">
                 <span className="font-medium">Total</span>
-                <span className="text-lg font-bold">${currentProduct.price}</span>
+                <span className="text-lg font-bold">
+                  ${currentProduct.price}
+                </span>
               </div>
               <Button className="w-full bg-green-600 text-white">
                 Complete Order
