@@ -63,18 +63,23 @@ const products = {
     price: 19.99,
     description: "100% Cotton • Available in all sizes",
     views: [
-      { id: "front", name: "Front", image: productTshirt },
+      {
+        id: "front",
+        name: "Front",
+        image:
+          "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800&h=1000&fit=crop&q=80",
+      },
       {
         id: "back",
         name: "Back",
         image:
-          "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=400&h=400&fit=crop",
+          "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=800&h=1000&fit=crop&q=80",
       },
       {
         id: "side",
         name: "Side",
         image:
-          "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=400&h=400&fit=crop",
+          "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=800&h=1000&fit=crop&q=80",
       },
     ],
   },
@@ -1010,21 +1015,12 @@ const Designer = () => {
     if (!canvasRef.current) return;
 
     const canvas = new FabricCanvas(canvasRef.current, {
-      width: 400,
-      height: 400,
+      width: 500,
+      height: 350,
       backgroundColor: "transparent",
     });
 
-    // Add product background
-    FabricImage.fromURL(currentProduct.views[currentView].image).then((img) => {
-      img.scaleToWidth(400);
-      img.scaleToHeight(400);
-      img.set({ selectable: false, evented: false });
-      canvas.add(img);
-      canvas.sendObjectToBack(img);
-      canvas.renderAll();
-    });
-
+    // Don't add product background - it will be shown separately
     setFabricCanvas(canvas);
 
     return () => {
@@ -1570,10 +1566,10 @@ const Designer = () => {
   );
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-white relative overflow-hidden">
       {/* Header */}
-      <div className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4">
+      <div className="border-b border-border bg-white shadow-sm sticky top-0 z-50">
+        <div className="container mx-auto px-4 py-3">
           <div className="flex items-center justify-between">
             <Button
               variant="ghost"
@@ -1583,7 +1579,7 @@ const Designer = () => {
               <Home className="h-4 w-4" />
               Back to Home
             </Button>
-            <h1 className="text-2xl font-bold bg-gradient-primary bg-clip-text text-transparent">
+            <h1 className="text-xl font-bold bg-gradient-primary bg-clip-text text-transparent">
               Design Studio
             </h1>
             <div className="flex gap-2">
@@ -1615,10 +1611,11 @@ const Designer = () => {
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-8">
-        <div className="grid lg:grid-cols-[350px_1fr_300px] gap-6">
-          {/* Left Sidebar - Design Elements */}
-          <Card className="p-4 h-fit shadow-card">
+      {/* Full Screen Canvas Layout */}
+      <div className="relative h-[calc(100vh-73px)] flex">
+        {/* Left Sidebar - Floating Design Elements Panel */}
+        <div className="absolute left-4 top-4 z-40 w-96">
+          <Card className="p-4 shadow-2xl bg-white/95 backdrop-blur-sm max-h-[calc(100vh-120px)] overflow-y-auto">
             <div className="flex items-center gap-2 mb-4">
               <Sparkles className="h-5 w-5 text-primary" />
               <h3 className="font-semibold">Design Elements</h3>
@@ -1637,32 +1634,91 @@ const Designer = () => {
               </TabsList>
 
               {/* Images Tab */}
-              <TabsContent value="images" className="space-y-4 mt-4">
-                {Object.entries(imageCategories).map(([category, images]) => (
-                  <div key={category}>
-                    <h4 className="font-medium text-sm mb-2">{category}</h4>
-                    <div className="grid grid-cols-2 gap-2">
-                      {images.map((image) => (
-                        <div
-                          key={image.id}
-                          className="relative group cursor-pointer rounded-lg overflow-hidden border border-border hover:border-primary transition-all"
-                          onClick={() => addImage(image.url)}
-                        >
-                          <img
-                            src={image.url}
-                            alt={image.name}
-                            className="w-full h-16 object-cover"
-                          />
-                          <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <div className="absolute inset-0 flex items-center justify-center">
-                              <Plus className="h-4 w-4 text-white" />
-                            </div>
-                          </div>
+              <TabsContent value="images" className="space-y-3 mt-4">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    placeholder="Search images..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="pl-9"
+                  />
+                </div>
+
+                <div className="flex gap-2 flex-wrap">
+                  {[
+                    "All",
+                    "Nature",
+                    "Abstract",
+                    "Urban",
+                    "Space",
+                    "Animals",
+                    "Food",
+                  ].map((cat) => (
+                    <Button
+                      key={cat}
+                      variant={selectedCategory === cat ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setSelectedCategory(cat)}
+                      className="text-xs"
+                    >
+                      {cat}
+                    </Button>
+                  ))}
+                </div>
+
+                <div className="grid grid-cols-3 gap-2">
+                  {(selectedCategory === "All"
+                    ? Object.values(imageCategories).flat()
+                    : imageCategories[
+                        selectedCategory as keyof typeof imageCategories
+                      ] || []
+                  )
+                    .filter((img) =>
+                      img.name.toLowerCase().includes(searchQuery.toLowerCase())
+                    )
+                    .slice(0, 12)
+                    .map((image) => (
+                      <div
+                        key={image.id}
+                        className="relative group cursor-pointer rounded-lg overflow-hidden border-2 border-border hover:border-primary transition-all aspect-square"
+                        onClick={() => addImage(image.url)}
+                      >
+                        <img
+                          src={image.url}
+                          alt={image.name}
+                          className="w-full h-full object-cover"
+                        />
+                        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                          <Plus className="h-6 w-6 text-white" />
                         </div>
-                      ))}
-                    </div>
+                        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-2">
+                          <p className="text-white text-xs font-medium truncate">
+                            {image.name}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                </div>
+                {/* Stickers Section */}
+                <div className="pt-4 border-t">
+                  <h4 className="font-medium text-sm mb-3 flex items-center gap-2">
+                    <Sparkles className="h-4 w-4" />
+                    Stickers
+                  </h4>
+                  <div className="grid grid-cols-6 gap-2">
+                    {stickers.slice(0, 18).map((sticker) => (
+                      <button
+                        key={sticker.id}
+                        onClick={() => addSticker(sticker)}
+                        className="aspect-square rounded-lg border-2 border-border hover:border-primary transition-all flex items-center justify-center text-2xl hover:scale-110 transform bg-white"
+                        title={sticker.name}
+                      >
+                        {sticker.icon}
+                      </button>
+                    ))}
                   </div>
-                ))}
+                </div>
               </TabsContent>
 
               {/* Text Tab */}
@@ -2213,138 +2269,50 @@ const Designer = () => {
               </TabsContent>
             </Tabs>
           </Card>
+        </div>
 
-          {/* Center - Product Canvas */}
-          <div className="flex flex-col items-center gap-4">
-            {/* Product Selection */}
-            <Card className="p-4 w-full">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="font-semibold">Select Product</h3>
-                <div className="flex items-center gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setIsRotating(!isRotating)}
-                    className={
-                      isRotating ? "bg-primary text-primary-foreground" : ""
-                    }
-                  >
-                    <RotateCcw className="h-4 w-4 mr-2" />
-                    {isRotating ? "Stop" : "Auto Rotate"}
-                  </Button>
-                </div>
-              </div>
+        {/* Right Side - Product Preview with Canvas Overlay */}
+        <div className="flex-1 flex items-center justify-center relative">
+          {/* Product Image Background */}
+          <div className="relative w-full h-full flex items-center justify-center pl-20">
+            <img
+              src={currentProduct.views[currentView].image}
+              alt={currentProduct.name}
+              className="max-h-[95vh] w-auto object-contain"
+            />
 
-              <div className="grid grid-cols-4 gap-2 mb-4">
-                {Object.entries(products).map(([key, product]) => (
-                  <button
-                    key={key}
-                    onClick={() => setSelectedProduct(key)}
-                    className={`p-2 rounded-lg border-2 transition-all ${
-                      selectedProduct === key
-                        ? "border-primary bg-primary/10"
-                        : "border-border hover:border-primary/50"
-                    }`}
-                  >
-                    <img
-                      src={product.views[0].image}
-                      alt={product.name}
-                      className="w-full h-16 object-cover rounded"
-                    />
-                    <p className="text-xs font-medium mt-1">{product.name}</p>
-                  </button>
-                ))}
-              </div>
-
-              {/* View Thumbnails */}
-              <div className="flex gap-2 justify-center">
-                {currentProduct.views.map((view, index) => (
-                  <button
-                    key={view.id}
-                    onClick={() => setCurrentView(index)}
-                    className={`relative w-16 h-16 rounded-lg overflow-hidden border-2 transition-all ${
-                      currentView === index
-                        ? "border-primary shadow-lg scale-105"
-                        : "border-border hover:border-primary/50"
-                    }`}
-                  >
-                    <img
-                      src={view.image}
-                      alt={view.name}
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute bottom-0 left-0 right-0 bg-black/70 text-white text-xs px-1 py-0.5 text-center">
-                      {view.name}
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </Card>
-
-            {/* Canvas */}
-            <Card className="p-8 shadow-elevated bg-gradient-card">
-              <div className="relative">
-                <div
-                  className="absolute -inset-4 bg-gradient-primary opacity-20 blur-2xl rounded-lg"
-                  aria-hidden="true"
-                />
-                <div className="relative bg-white rounded-lg shadow-lg overflow-hidden">
-                  <canvas ref={canvasRef} className="max-w-full" />
-                </div>
-              </div>
-            </Card>
-
-            <div className="text-center text-sm text-muted-foreground">
-              Click and drag objects to move • Use corners to resize •
-              Double-click text to edit
+            {/* Canvas Overlay on Product - Starting at neck area */}
+            <div className="absolute top-[18%] left-1/2 transform -translate-x-1/2">
+              <canvas
+                ref={canvasRef}
+                className="border-2 border-dashed border-white/50"
+              />
             </div>
           </div>
 
-          {/* Right Sidebar - Product Info & Checkout */}
-          <Card className="p-4 h-fit shadow-card">
-            <h3 className="font-semibold mb-4">Product Details</h3>
-            <div className="space-y-4">
-              <div className="aspect-square rounded-lg overflow-hidden border-2 border-border">
+          {/* View Selector - Right Side */}
+          <div className="absolute right-4 top-1/2 transform -translate-y-1/2 flex flex-col gap-3">
+            {currentProduct.views.map((view, index) => (
+              <button
+                key={view.id}
+                onClick={() => setCurrentView(index)}
+                className={`relative w-20 h-20 rounded-lg overflow-hidden border-2 transition-all ${
+                  currentView === index
+                    ? "border-primary shadow-lg scale-110"
+                    : "border-gray-300 hover:border-primary/50"
+                }`}
+              >
                 <img
-                  src={currentProduct.views[currentView].image}
-                  alt="Product preview"
+                  src={view.image}
+                  alt={view.name}
                   className="w-full h-full object-cover"
                 />
-              </div>
-              <div className="space-y-2">
-                <h4 className="font-medium">{currentProduct.name}</h4>
-                <p className="text-sm text-muted-foreground">
-                  {currentProduct.description}
-                </p>
-                <div className="flex items-center gap-2">
-                  <p className="text-lg font-bold text-primary">
-                    ${currentProduct.price}
-                  </p>
-                  <Badge
-                    variant="secondary"
-                    className="bg-green-100 text-green-800"
-                  >
-                    <Star className="h-3 w-3 mr-1" />
-                    Premium
-                  </Badge>
+                <div className="absolute bottom-0 left-0 right-0 bg-black/70 text-white text-xs px-1 py-0.5 text-center">
+                  {view.name}
                 </div>
-              </div>
-
-              <div className="space-y-2">
-                <Button className="w-full bg-gradient-primary text-primary-foreground">
-                  <Heart className="h-4 w-4 mr-2" />
-                  Add to Favorites
-                </Button>
-                <Button
-                  onClick={proceedToCheckout}
-                  className="w-full bg-green-600 text-white"
-                >
-                  <ShoppingCart className="h-4 w-4 mr-2" />
-                  Add to Cart - ${currentProduct.price}
-                </Button>
-              </div>
-            </div>
-          </Card>
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
